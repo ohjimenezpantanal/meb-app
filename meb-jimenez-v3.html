@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MEB Jiménez">
+<meta name="theme-color" content="#1a1a18">
+<link rel="manifest" href="manifest.json">
+<title>MEB Jiménez</title>
+<style>
+:root{
+  --bg:#f5f4f0;--bg2:#eceae4;--bg3:#fff;
+  --text:#1a1a18;--text2:#555;--text3:#888;
+  --border:#dddad2;--border2:#ccc;
+  --green:#6b7a3a;--green-light:#e8f0d4;
+  --purple:#7a6a9a;--purple-light:#ede9f8;
+  --red:#a32d2d;--red-light:#fef0f0;
+  --dark:#1a1a18;--dark-text:#f0ece0;
+  --olive:#6b7a3a;
+  --r:12px;--r2:10px;--r3:8px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#111;--bg2:#1a1a18;--bg3:#1e1e1c;
+    --text:#f0ece0;--text2:#aaa;--text3:#666;
+    --border:#2e2e2c;--border2:#3a3a38;
+    --green-light:#1e2a0e;--purple-light:#1e1a2e;--red-light:#2a1515;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;max-width:480px;margin:0 auto;}
+.safe-pad{padding-bottom:calc(60px + var(--safe-bottom));}
+
+/* HEADER */
+.app-hdr{background:var(--dark);padding:14px 16px 12px;display:flex;justify-content:space-between;align-items:center;}
+.hdr-brand{font-size:15px;font-weight:600;color:var(--dark-text);letter-spacing:0.04em;}
+.hdr-sub{font-size:9px;letter-spacing:0.14em;color:var(--purple);text-transform:uppercase;margin-top:1px;}
+.hdr-stats{display:flex;gap:14px;}
+.hstat{text-align:right;}
+.hstat-n{font-size:19px;font-weight:600;line-height:1;}
+.hstat-l{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em;}
+.streak-n{color:var(--green);}
+.xp-n{color:var(--purple);}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--dark);display:flex;z-index:100;padding-bottom:var(--safe-bottom);}
+.bn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px;border:none;background:transparent;color:var(--text3);cursor:pointer;font-family:inherit;font-size:9px;letter-spacing:0.04em;text-transform:uppercase;}
+.bn svg{width:20px;height:20px;}
+.bn.active{color:var(--dark-text);}
+.bn-dot{width:4px;height:4px;border-radius:50%;background:transparent;margin:0 auto;}
+.bn.active .bn-dot{background:var(--green);}
+
+/* PAGES */
+.page{display:none;padding:12px;}.page.active{display:block;}
+
+/* TYPOGRAPHY */
+.sl{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;font-weight:600;margin-bottom:7px;margin-top:14px;}
+.sl-green{color:var(--green);}
+.sl-purple{color:var(--purple);}
+.sl-olive{color:var(--olive);}
+
+/* CARDS */
+.card{background:var(--bg3);border-radius:var(--r);padding:14px 16px;margin-bottom:8px;border:0.5px solid var(--border);}
+.card-dark{background:var(--dark);border-radius:var(--r);padding:14px 16px;margin-bottom:8px;}
+.card-accent-green{border-left:3px solid var(--green);border-radius:0 var(--r) var(--r) 0;}
+.card-accent-purple{border-left:3px solid var(--purple);border-radius:0 var(--r) var(--r) 0;}
+
+/* QUOTE */
+.quote-card{background:var(--bg2);border-radius:var(--r);border-left:3px solid var(--green);padding:16px 18px;margin-bottom:8px;}
+.quote-text{font-size:14px;font-style:italic;color:var(--text);line-height:1.7;}
+.quote-nav{display:flex;gap:6px;margin-top:10px;align-items:center;}
+.quote-idx{font-size:11px;color:var(--text3);flex:1;text-align:center;}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px;}
+.kpi-item{background:var(--bg3);border-radius:var(--r2);padding:11px;border:0.5px solid var(--border);}
+.kpi-name{font-size:11px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.kpi-sub{font-size:10px;color:var(--text3);margin-bottom:6px;line-height:1.3;}
+.kpi-row{display:flex;gap:5px;align-items:center;}
+.kbtn{width:28px;height:28px;border-radius:var(--r3);border:0.5px solid var(--border2);background:var(--bg);color:var(--text);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;}
+.kbtn.g{background:var(--green);color:#fff;border-color:var(--green);}
+.kbtn.r{background:var(--red);color:#fff;border-color:var(--red);}
+.kdot{width:5px;height:5px;border-radius:50%;background:var(--border);margin-left:3px;flex-shrink:0;}
+.kdot.g{background:var(--green);}
+.kdot.r{background:var(--red);}
+
+/* DIARY */
+.drow{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px;}
+textarea,select,input[type=text]{width:100%;font-size:13px;padding:9px 11px;border-radius:var(--r2);border:0.5px solid var(--border2);background:var(--bg3);color:var(--text);font-family:inherit;margin-bottom:6px;}
+textarea{min-height:70px;resize:vertical;}
+.dlabel{font-size:10px;color:var(--text3);display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:0.06em;}
+
+/* BUTTONS */
+.sbtn{width:100%;padding:11px;border-radius:var(--r2);border:none;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;}
+.sbtn:active{transform:scale(0.98);}
+.sbtn-green{background:var(--green);color:#fff;}
+.sbtn-dark{background:var(--dark);color:var(--dark-text);}
+.sbtn-purple{background:var(--purple);color:#fff;}
+.sbtn-outline{background:transparent;border:0.5px solid var(--green);color:var(--green);}
+.btn-row{display:flex;gap:7px;margin-top:7px;}
+.btn2{flex:1;padding:9px;border-radius:var(--r2);border:0.5px solid var(--border2);background:var(--bg3);color:var(--text);cursor:pointer;font-size:12px;font-family:inherit;}
+.btn2.g{background:var(--green);color:#fff;border-color:var(--green);}
+.btn2.r{background:var(--red);color:#fff;border-color:var(--red);}
+.btn2.p{background:var(--purple);color:#fff;border-color:var(--purple);}
+
+/* MODULE TABS */
+.mod-tabs{display:flex;gap:3px;background:var(--bg2);border-radius:var(--r);padding:3px;margin-bottom:10px;overflow-x:auto;}
+.mt{flex:1;min-width:60px;font-size:10px;padding:7px 4px;border-radius:var(--r2);border:none;background:transparent;color:var(--text3);cursor:pointer;font-family:inherit;white-space:nowrap;text-align:center;}
+.mt.active{background:var(--dark);color:var(--dark-text);}
+
+/* SUB PANELS */
+.sub{display:none;}.sub.active{display:block;}
+
+/* PROTOCOL ITEM */
+.pitem{background:var(--bg2);border-radius:var(--r2);padding:11px 13px;margin-bottom:6px;}
+.plabel{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--green);margin-bottom:3px;font-weight:600;}
+.ptext{font-size:12px;color:var(--text);line-height:1.5;}
+
+/* TENSION */
+.titem{background:var(--bg2);border-radius:var(--r2);padding:11px 13px;margin-bottom:6px;border-left:3px solid var(--purple);}
+.tlabel{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--purple);margin-bottom:3px;font-weight:600;}
+.ttext{font-size:12px;color:var(--text);line-height:1.5;margin-bottom:3px;}
+.tinteg{font-size:11px;color:var(--text2);line-height:1.45;font-style:italic;}
+
+/* KARMIC */
+.kitem{background:var(--bg3);border-radius:var(--r2);border:0.5px solid var(--border);padding:11px 13px;margin-bottom:6px;}
+.ktitle{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.kdesc{font-size:12px;color:var(--text2);line-height:1.5;}
+.koscar{font-size:11px;color:var(--purple);margin-top:5px;border-top:0.5px solid var(--border);padding-top:5px;}
+
+/* WARNING */
+.witem{background:var(--red-light);border-radius:var(--r2);border-left:3px solid var(--red);padding:11px 13px;margin-bottom:6px;}
+.wlabel{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--red);margin-bottom:2px;font-weight:600;}
+.wtext{font-size:12px;color:#6b1a1a;line-height:1.5;}
+@media(prefers-color-scheme:dark){.wtext{color:#f0a0a0;}}
+
+/* PRACTICE */
+.pract-item{background:var(--bg2);border-radius:var(--r2);padding:11px 13px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.pract-left{flex:1;}
+.pract-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.pract-sub{font-size:10px;color:var(--text3);}
+.pract-chk{width:28px;height:28px;border-radius:50%;border:0.5px solid var(--border2);background:var(--bg3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--text3);flex-shrink:0;}
+.pract-chk.done{background:var(--purple);border-color:var(--purple);color:#fff;}
+
+/* ENERGY CHECK */
+.eg{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px;}
+.ei{background:var(--bg3);border-radius:var(--r2);padding:11px;border:0.5px solid var(--border);}
+.en{font-size:11px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.ec{display:flex;gap:4px;flex-wrap:wrap;}
+.eb{padding:4px 8px;border-radius:var(--r3);border:0.5px solid var(--border2);background:var(--bg);color:var(--text3);cursor:pointer;font-size:10px;font-family:inherit;}
+.eb.on{background:var(--purple);color:#fff;border-color:var(--purple);}
+
+/* ACTIVATORS */
+.avitem{background:var(--bg3);border-radius:var(--r2);border:0.5px solid var(--border);padding:11px 13px;margin-bottom:6px;}
+.avlabel{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--purple);margin-bottom:2px;font-weight:600;}
+.avtext{font-size:12px;color:var(--text);line-height:1.5;}
+
+/* FLASHCARDS */
+.fc-wrap{background:var(--bg2);border-radius:var(--r);padding:16px;min-height:110px;cursor:pointer;margin-bottom:7px;display:flex;flex-direction:column;border:0.5px solid var(--border);}
+.fc-tag{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--green);margin-bottom:8px;font-weight:600;}
+.fc-tag.purple{color:var(--purple);}
+.fc-q{font-size:13px;color:var(--text);line-height:1.5;flex:1;}
+.fc-hint{font-size:10px;color:var(--text3);margin-top:8px;text-align:center;}
+.fc-ans{background:var(--dark);border-radius:var(--r);padding:13px 15px;margin-bottom:7px;display:none;}
+.fc-ans.show{display:block;}
+.fc-at{font-size:12px;color:var(--dark-text);line-height:1.6;}
+.fc-ap{font-size:11px;color:var(--purple);margin-top:5px;border-top:0.5px solid #333;padding-top:5px;}
+.fc-ctrl{display:none;gap:7px;margin-bottom:7px;}
+.fc-ctrl.show{display:flex;}
+.pb-wrap{height:3px;background:var(--bg2);border-radius:2px;margin-bottom:9px;}
+.pb-bar{height:3px;border-radius:2px;transition:width 0.3s;}
+.pb-green{background:var(--green);}
+.pb-purple{background:var(--purple);}
+.fc-counter{font-size:10px;color:var(--text3);text-align:center;margin-bottom:5px;}
+
+/* CHALLENGE */
+.des-card{background:var(--bg2);border-radius:var(--r);padding:14px 16px;margin-bottom:8px;}
+.des-sit{font-size:11px;color:var(--text2);font-style:italic;margin-bottom:5px;line-height:1.5;}
+.des-preg{font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;line-height:1.4;}
+.des-opt{width:100%;padding:10px 13px;border-radius:var(--r2);border:0.5px solid var(--border2);background:var(--bg3);color:var(--text);cursor:pointer;font-size:12px;font-family:inherit;text-align:left;line-height:1.4;margin-bottom:6px;display:block;}
+.des-opt.ok{background:var(--green-light);border-color:var(--green);color:#2a4a0a;}
+.des-opt.fail{background:var(--red-light);border-color:var(--red);color:#6b1a1a;}
+.des-opt.disabled{cursor:default;}
+.des-fb{margin-top:8px;padding:10px 12px;border-radius:var(--r2);font-size:12px;line-height:1.5;display:none;border-radius:0 var(--r2) var(--r2) 0;}
+.des-fb.show{display:block;}
+.des-fb.ok{background:var(--green-light);border-left:3px solid var(--green);color:#2a4a0a;}
+.des-fb.fail{background:var(--red-light);border-left:3px solid var(--red);color:#6b1a1a;}
+@media(prefers-color-scheme:dark){.des-fb.ok{color:#a0d070;}.des-fb.fail{color:#f0a0a0;}.des-opt.ok{color:#a0d070;}.des-opt.fail{color:#f0a0a0;}}
+.nbtn{width:100%;padding:9px;border-radius:var(--r2);border:0.5px solid var(--green);background:transparent;color:var(--green);cursor:pointer;font-size:12px;font-family:inherit;margin-top:7px;display:none;}
+.nbtn.show{display:block;}
+
+/* SOS */
+.sos-big{width:100%;padding:16px;border-radius:var(--r);border:none;background:var(--dark);color:var(--dark-text);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-bottom:10px;letter-spacing:0.02em;}
+.sos-big:active{transform:scale(0.98);}
+.sos-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px;}
+.sos-card{background:var(--bg3);border-radius:var(--r2);padding:12px;cursor:pointer;border:0.5px solid var(--border);}
+.sos-card:active{transform:scale(0.97);}
+.sos-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.sos-sub{font-size:10px;color:var(--text3);}
+.sos-resp{background:var(--dark);border-radius:var(--r);padding:16px 18px;display:none;}
+.sos-resp.show{display:block;}
+.sos-tag{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--green);margin-bottom:7px;font-weight:600;}
+.sos-text{font-size:13px;color:var(--dark-text);line-height:1.7;font-style:italic;}
+.sos-action{font-size:11px;color:#b0aa94;margin-top:9px;line-height:1.5;border-top:0.5px solid #333;padding-top:9px;}
+
+/* METAS */
+.meta-item{background:var(--bg3);border-radius:var(--r2);border:0.5px solid var(--border);padding:11px 13px;margin-bottom:7px;}
+.meta-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px;}
+.meta-name{font-size:13px;font-weight:600;color:var(--text);}
+.meta-cat{font-size:10px;color:var(--text3);}
+.meta-pct{font-size:13px;font-weight:600;color:var(--green);}
+.meta-bar-bg{height:3px;background:var(--bg2);border-radius:2px;}
+.meta-bar{height:3px;background:var(--green);border-radius:2px;}
+.mdel{background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:0 0 0 8px;}
+.irow{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px;}
+.srow{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
+input[type=range]{flex:1;accent-color:var(--green);}
+.sval{font-size:12px;font-weight:600;color:var(--green);min-width:28px;}
+
+/* WEEKLY REVIEW */
+.review-q{background:var(--bg3);border-radius:var(--r2);border:0.5px solid var(--border);padding:12px 14px;margin-bottom:8px;}
+.review-q-label{font-size:11px;font-weight:600;color:var(--green);margin-bottom:5px;}
+.review-q-sub{font-size:10px;color:var(--text3);margin-bottom:6px;font-style:italic;}
+
+/* TRAINING */
+.train-card{background:var(--dark);border-radius:var(--r);padding:16px 18px;margin-bottom:8px;}
+.train-scenario{font-size:12px;color:#b0aa94;font-style:italic;margin-bottom:8px;line-height:1.5;}
+.train-q{font-size:14px;font-weight:600;color:var(--dark-text);margin-bottom:14px;line-height:1.4;}
+
+/* AI */
+.ai-out{background:var(--dark);border-radius:var(--r);padding:15px 17px;margin-top:9px;display:none;}
+.ai-out.show{display:block;}
+.ai-tag{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--green);margin-bottom:7px;font-weight:600;}
+.ai-text{font-size:13px;color:var(--dark-text);line-height:1.75;white-space:pre-wrap;}
+.ai-loading{font-size:13px;color:var(--purple);font-style:italic;}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px;}
+.stat-card{background:var(--bg3);border-radius:var(--r2);padding:12px;text-align:center;border:0.5px solid var(--border);}
+.stat-n{font-size:20px;font-weight:700;}
+.stat-l{font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:var(--text3);margin-top:2px;}
+
+/* HIST */
+.hist-item{background:var(--bg2);border-radius:var(--r2);padding:10px 12px;margin-bottom:6px;}
+.hist-date{font-size:10px;color:var(--green);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:3px;font-weight:600;}
+.hist-badges{display:flex;gap:4px;margin-bottom:4px;flex-wrap:wrap;}
+.hbadge{font-size:10px;padding:2px 6px;border-radius:var(--r3);background:var(--bg3);border:0.5px solid var(--border);color:var(--text3);}
+.hbadge.ok{border-color:var(--green);color:var(--green);}
+.hist-text{font-size:11px;color:var(--text2);line-height:1.45;margin-bottom:2px;}
+
+/* LIBRARY */
+.lib-book{background:var(--bg3);border-radius:var(--r2);border:0.5px solid var(--border);padding:12px 14px;margin-bottom:7px;}
+.lib-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.lib-author{font-size:11px;color:var(--green);margin-bottom:7px;}
+.lib-terms{display:flex;flex-wrap:wrap;gap:4px;}
+.lib-term{font-size:10px;padding:3px 9px;border-radius:var(--r3);background:var(--bg2);border:0.5px solid var(--border);color:var(--text2);cursor:pointer;}
+.lib-term:active{background:var(--green);color:#fff;border-color:var(--green);}
+.term-detail{background:var(--dark);border-radius:var(--r2);padding:12px 14px;margin-top:7px;display:none;}
+.term-detail.show{display:block;}
+.term-name{font-size:13px;font-weight:600;color:var(--dark-text);margin-bottom:4px;}
+.term-def{font-size:12px;color:#b0aa94;line-height:1.6;margin-bottom:6px;}
+.term-apply{font-size:12px;color:var(--green);line-height:1.6;}
+
+/* TOAST */
+.toast{position:fixed;bottom:calc(70px + var(--safe-bottom));left:50%;transform:translateX(-50%);background:var(--dark);color:var(--dark-text);font-size:12px;padding:8px 18px;border-radius:var(--r);opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:200;white-space:nowrap;}
+.toast.show{opacity:1;}
+
+/* EMPTY */
+.empty{font-size:12px;color:var(--text3);text-align:center;padding:18px 0;font-style:italic;}
+
+.mt-6{margin-top:6px;} .mt-8{margin-top:8px;}
+</style>
+</head>
+<body>
+
+<div class="app-hdr">
+  <div>
+    <div class="hdr-brand">MEB Jiménez</div>
+    <div class="hdr-sub">Management · Strategy · Order</div>
+  </div>
+  <div class="hdr-stats">
+    <div class="hstat"><div class="hstat-n streak-n" id="h-streak">0</div><div class="hstat-l">días</div></div>
+    <div class="hstat"><div class="hstat-n xp-n" id="h-xp">0</div><div class="hstat-l">XP</div></div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="bn active" onclick="goPage('hoy',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+    Hoy<div class="bn-dot"></div>
+  </button>
+  <button class="bn" onclick="goPage('construir',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    Construir<div class="bn-dot"></div>
+  </button>
+  <button class="bn" onclick="goPage('aprender',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+    Aprender<div class="bn-dot"></div>
+  </button>
+  <button class="bn" onclick="goPage('oraculo',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+    Oráculo<div class="bn-dot"></div>
+  </button>
+  <button class="bn" onclick="goPage('sos',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    SOS<div class="bn-dot"></div>
+  </button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- HOY -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="page-hoy" class="page active safe-pad">
+
+  <!-- MOTOR CONTEXTUAL — generado dinámicamente -->
+  <div id="ctx-banner"></div>
+  <div id="ctx-alerta"></div>
+  <div id="ctx-frase"></div>
+  <div id="ctx-accion"></div>
+
+  <div class="sl sl-green">Check-in — Construcción</div>
+  <div class="kpi-grid">
+    <div class="kpi-item"><div class="kpi-name">¿Decidí sin pedir permiso?</div><div class="kpi-sub">Una decisión ejecutiva sin justificación</div><div class="kpi-row"><button class="kbtn" id="k1y" onclick="setK(1,true)">✓</button><button class="kbtn" id="k1n" onclick="setK(1,false)">✗</button><div class="kdot" id="k1d"></div></div></div>
+    <div class="kpi-item"><div class="kpi-name">¿Construí algo hoy?</div><div class="kpi-sub">Finca, empresa, legado, marca</div><div class="kpi-row"><button class="kbtn" id="k2y" onclick="setK(2,true)">✓</button><button class="kbtn" id="k2n" onclick="setK(2,false)">✗</button><div class="kdot" id="k2d"></div></div></div>
+    <div class="kpi-item"><div class="kpi-name">¿Mantuve el eje?</div><div class="kpi-sub">Sin ceder energía que no merecía cederse</div><div class="kpi-row"><button class="kbtn" id="k3y" onclick="setK(3,true)">✓</button><button class="kbtn" id="k3n" onclick="setK(3,false)">✗</button><div class="kdot" id="k3d"></div></div></div>
+    <div class="kpi-item"><div class="kpi-name">¿Moví el cuerpo?</div><div class="kpi-sub">Marte Géminis — obligatorio</div><div class="kpi-row"><button class="kbtn" id="k4y" onclick="setK(4,true)">✓</button><button class="kbtn" id="k4n" onclick="setK(4,false)">✗</button><div class="kdot" id="k4d"></div></div></div>
+  </div>
+
+  <div class="sl sl-olive">Check-in — Operaciones</div>
+  <div class="kpi-grid">
+    <div class="kpi-item"><div class="kpi-name">Enfoque patrimonial</div><div class="kpi-sub">100% energía en rentabilidad</div><div class="kpi-row"><button class="kbtn" id="k5y" onclick="setK(5,true)">✓</button><button class="kbtn" id="k5n" onclick="setK(5,false)">✗</button><div class="kdot" id="k5d"></div></div></div>
+    <div class="kpi-item"><div class="kpi-name">Ratio estratégico</div><div class="kpi-sub">Meta: 60% ejecutivo / 40% operativo</div><div class="kpi-row"><button class="kbtn" id="k6y" onclick="setK(6,true)">✓</button><button class="kbtn" id="k6n" onclick="setK(6,false)">✗</button><div class="kdot" id="k6d"></div></div></div>
+  </div>
+
+  <div class="sl sl-green">Diario ejecutivo</div>
+  <div class="drow">
+    <div><label class="dlabel">¿Qué construí hoy?</label><textarea id="d-construi" placeholder="Decisión, avance, movimiento..."></textarea></div>
+    <div><label class="dlabel">¿Dónde cedí energía?</label><textarea id="d-cedi" placeholder="A mejorar mañana..."></textarea></div>
+  </div>
+  <label class="dlabel">Movimiento estratégico del día</label>
+  <textarea id="d-mov" placeholder="El paso más importante que di hoy hacia mi misión..."></textarea>
+  <button class="sbtn sbtn-green" onclick="guardarDia()">Guardar día</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- CONSTRUIR -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="page-construir" class="page safe-pad">
+  <div class="mod-tabs">
+    <button class="mt active" onclick="goSub('construir','revision',this)">Revisión</button>
+    <button class="mt" onclick="goSub('construir','entrenamiento',this)">Entrenamiento</button>
+    <button class="mt" onclick="goSub('construir','metas',this)">Metas</button>
+    <button class="mt" onclick="goSub('construir','historial',this)">Log</button>
+  </div>
+
+  <!-- REVISIÓN SEMANAL -->
+  <div id="sub-construir-revision" class="sub active">
+    <div class="card card-accent-green">
+      <div style="font-size:12px;color:var(--text2);line-height:1.55;">Revisión ejecutiva semanal — 20 minutos los viernes. Tres preguntas. Sin drama, sin análisis emocional. Frío y ejecutivo.</div>
+    </div>
+    <div class="review-q">
+      <div class="review-q-label">1 — ¿Qué construí esta semana?</div>
+      <div class="review-q-sub">Decisiones tomadas, avances en fincas, metas movidas, capital sistémico generado.</div>
+      <textarea id="rv-construi" placeholder="Lista concreta de lo que avanzó..."></textarea>
+    </div>
+    <div class="review-q">
+      <div class="review-q-label">2 — ¿Dónde cedí energía que no merecía cederse?</div>
+      <div class="review-q-sub">Momentos de dopamina barata, contrato latente activado, Modo Padilla, justificaciones innecesarias.</div>
+      <textarea id="rv-cedi" placeholder="Sin juicio — solo diagnóstico..."></textarea>
+    </div>
+    <div class="review-q">
+      <div class="review-q-label">3 — ¿Cuál es el movimiento más importante de la semana que viene?</div>
+      <div class="review-q-sub">Una sola decisión estratégica. La más importante. No la lista completa — la número uno.</div>
+      <textarea id="rv-siguiente" placeholder="El movimiento que más importa..."></textarea>
+    </div>
+    <button class="sbtn sbtn-green mt-8" onclick="guardarRevision()">Guardar revisión</button>
+    <div class="sl sl-green" style="margin-top:14px;">Revisiones anteriores</div>
+    <div id="rv-hist"></div>
+  </div>
+
+  <!-- ENTRENAMIENTO DE RESPUESTA -->
+  <div id="sub-construir-entrenamiento" class="sub">
+    <div class="card card-accent-green">
+      <div style="font-size:12px;color:var(--text2);line-height:1.55;">Simulador de decisión — practica la respuesta correcta antes de que llegue el momento real. El músculo se entrena aquí, no en el campo.</div>
+    </div>
+    <div class="sl sl-green">Situación de entrenamiento</div>
+    <div class="des-card" id="train-wrap">
+      <div class="des-sit" id="train-sit"></div>
+      <div class="des-preg" id="train-preg"></div>
+      <div id="train-opts"></div>
+      <div class="des-fb" id="train-fb"></div>
+      <button class="nbtn" id="train-next" onclick="nextTrain()">Siguiente situación →</button>
+    </div>
+  </div>
+
+  <!-- METAS -->
+  <div id="sub-construir-metas" class="sub">
+    <div id="metas-list"></div>
+    <div class="sl sl-green">Nueva meta</div>
+    <div class="irow">
+      <div><label class="dlabel">Meta</label><input type="text" id="m-nombre" placeholder="Ej: Soberanía energética 20%"></div>
+      <div><label class="dlabel">Categoría</label><select id="m-cat"><option>Negocios</option><option>Personal</option><option>Desarrollo</option><option>Salud</option><option>Familia</option><option>Energético</option></select></div>
+    </div>
+    <div class="srow"><label class="dlabel" style="white-space:nowrap;">Avance</label><input type="range" id="m-pct" min="0" max="100" value="0" step="1" oninput="document.getElementById('m-pct-v').textContent=this.value+'%'"><span class="sval" id="m-pct-v">0%</span></div>
+    <button class="sbtn sbtn-green" onclick="addMeta()">Agregar meta</button>
+  </div>
+
+  <!-- LOG -->
+  <div id="sub-construir-historial" class="sub">
+    <div class="sl sl-green">Registro de días</div>
+    <div id="hist-list"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- APRENDER -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="page-aprender" class="page safe-pad">
+  <div class="mod-tabs">
+    <button class="mt active" onclick="goSub('aprender','flash',this)">Flashcards</button>
+    <button class="mt" onclick="goSub('aprender','biblioteca',this)">Biblioteca</button>
+    <button class="mt" onclick="goSub('aprender','protocolo',this)">Protocolo 39</button>
+    <button class="mt" onclick="goSub('aprender','energetico',this)">Energético</button>
+    <button class="mt" onclick="goSub('aprender','entorno',this)">Entorno</button>
+  </div>
+
+  <!-- FLASHCARDS -->
+  <div id="sub-aprender-flash" class="sub active">
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-n" id="ap-xp" style="color:var(--purple)">0</div><div class="stat-l">XP</div></div>
+      <div class="stat-card"><div class="stat-n" id="ap-dom" style="color:var(--green)">0</div><div class="stat-l">Dominadas</div></div>
+      <div class="stat-card"><div class="stat-n" id="ap-des" style="color:var(--olive)">0</div><div class="stat-l">Desafíos ✓</div></div>
+    </div>
+    <div class="mod-tabs" style="margin-bottom:8px;">
+      <button class="mt active" onclick="setFCSet('39',this)">Op. 39</button>
+      <button class="mt" onclick="setFCSet('est',this)">Estratégico</button>
+      <button class="mt" onclick="setFCSet('ener',this)">Energético</button>
+    </div>
+    <div class="fc-counter" id="fc-c"></div>
+    <div class="pb-wrap"><div class="pb-bar pb-green" id="fc-pb"></div></div>
+    <div class="fc-wrap" onclick="toggleFC()">
+      <div class="fc-tag" id="fc-tag"></div>
+      <div class="fc-q" id="fc-q"></div>
+      <div class="fc-hint">Toca para ver la respuesta</div>
+    </div>
+    <div class="fc-ans" id="fc-ans"><div class="fc-at" id="fc-at"></div><div class="fc-ap" id="fc-ap"></div></div>
+    <div class="fc-ctrl" id="fc-ctrl">
+      <button class="btn2 r" onclick="fcRes(false)">✗ A repasar</button>
+      <button class="btn2 g" onclick="fcRes(true)">✓ Lo domino</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn2" onclick="prevFC()">←</button>
+      <button class="btn2" onclick="nextFC()" style="flex:3;">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- BIBLIOTECA -->
+  <div id="sub-aprender-biblioteca" class="sub">
+    <div class="sl sl-green">Libros maestros — Operación 39</div>
+    <div id="lib-39"></div>
+    <div class="sl sl-olive">Libros maestros — Campo estratégico</div>
+    <div id="lib-est"></div>
+  </div>
+
+  <!-- PROTOCOLO 39 -->
+  <div id="sub-aprender-protocolo" class="sub">
+    <div class="sl sl-green">Las 4 trampas</div>
+    <div class="pitem"><div class="plabel">Trampa 1 — Necesidad de aprobación</div><div class="ptext">"Quiero explicarle…" → Silencio absoluto. Las explicaciones te minimizan.</div></div>
+    <div class="pitem"><div class="plabel">Trampa 2 — Domesticación</div><div class="ptext">"Me siento culpable…" → Cierre contable. No eres un deudor emocional eterno.</div></div>
+    <div class="pitem"><div class="plabel">Trampa 3 — Proyección de mercado</div><div class="ptext">"¿Estará con otro…?" → Enfoque material. Tu valor es intrínseco.</div></div>
+    <div class="pitem"><div class="plabel">Trampa 4 — Dopamina barata</div><div class="ptext">"Voy a Quito de paso…" → Anclaje de tierra. Te quedas en tu base.</div></div>
+    <div class="sl sl-green">Las 6 directrices</div>
+    <div class="pitem"><div class="plabel">01 — Vacío de tierra · Bryans & Deida</div><div class="ptext">Inexistencia total ante faltas de respeto. Tu ausencia tiene peso propio.</div></div>
+    <div class="pitem"><div class="plabel">02 — Filtro varón desprogramado · Vilar</div><div class="ptext">Romper contratos latentes. Tu liquidez es para tu imperio y Alissa.</div></div>
+    <div class="pitem"><div class="plabel">03 — Factor "aire" erótico · Perel</div><div class="ptext">Tus tres bases son tu estrategia erótica. El fuego necesita aire.</div></div>
+    <div class="pitem"><div class="plabel">04 — Blindaje de vida privada · Wayne/Specter</div><div class="ptext">Selectividad. Tu vida privada no es espacio público.</div></div>
+    <div class="pitem"><div class="plabel">05 — Inversión en propósito · Deida</div><div class="ptext">Palma, ganado, real estate: tu templo. Cada minuto en lamentos es patrimonio robado.</div></div>
+    <div class="pitem"><div class="plabel">06 — Desapego del hombre superior · Kay</div><div class="ptext">Sin ruegos, sin viajes desesperados. Respeta su decisión y deja que la puerta se cierre.</div></div>
+    <div class="sl sl-green">Leyes del guerrero</div>
+    <div class="pitem"><div class="plabel">Sun Tzu</div><div class="ptext">"El guerrero invencible se asegura primero contra la derrota." Base sólida = posición asegurada.</div></div>
+    <div class="pitem"><div class="plabel">Miyamoto Musashi</div><div class="ptext">"No hagas nada que sea inútil." Tu mejor maniobra es la total inexistencia.</div></div>
+    <div class="pitem"><div class="plabel">Gary John Bishop</div><div class="ptext">Tu valor lo determinan tus acciones ejecutivas en la tierra, no los laberintos emocionales.</div></div>
+  </div>
+
+  <!-- CAMPO ENERGÉTICO -->
+  <div id="sub-aprender-energetico" class="sub">
+    <div class="card card-accent-purple">
+      <div style="font-size:13px;line-height:1.65;">Tierra · Fija · Yin — El ancla de su entorno. Practicidad extrema, lealtad incondicional, persistencia inquebrantable.</div>
+    </div>
+    <div class="sl sl-purple">Tensiones internas</div>
+    <div class="titem"><div class="tlabel">Sol Tauro vs. Casa 12</div><div class="ttext">Quieres seguridad material pero tu alma te empuja hacia lo espiritual.</div><div class="tinteg">Hacienda Pantanal como legado y servicio — no solo activo financiero.</div></div>
+    <div class="titem"><div class="tlabel">Luna Acuario vs. Venus Tauro</div><div class="ttext">Necesitas libertad total pero en el amor eres leal y buscas estabilidad. Atrae exactamente lo que más rechazas: el control.</div><div class="tinteg">La pareja ideal te expande, no te llena.</div></div>
+    <div class="titem"><div class="tlabel">Nodo Norte Aries vs. Nodo Sur Libra</div><div class="ttext">Tu hábito kármico es buscar aprobación. Tu misión es decidir solo y liderar firme.</div><div class="tinteg">Cada vez que aplicas Vacío de tierra, cumples tu misión kármica.</div></div>
+    <div class="sl sl-purple">Advertencias activas</div>
+    <div class="witem"><div class="wlabel">Casa 12 Géminis</div><div class="wtext">Precaución en comunicaciones escritas y contratos. Leer antes de firmar — siempre.</div></div>
+    <div class="witem"><div class="wlabel">Marte Casa 1</div><div class="wtext">Ejercicio físico obligatorio. Riesgo de accidentes por impulsividad.</div></div>
+    <div class="sl sl-purple">Práctica diaria</div>
+    <div id="pract-list"></div>
+    <button class="sbtn sbtn-purple mt-8" onclick="guardarPractica()">Guardar práctica</button>
+  </div>
+</div>
+
+  <!-- ENTORNO — Manifiesto de Soberanía Energética -->
+  <div id="sub-aprender-entorno" class="sub">
+    <div class="card card-accent-green" style="margin-bottom:10px;">
+      <div style="font-size:12px;color:var(--text2);line-height:1.55;">Manifiesto de Soberanía Energética — análisis de entorno macroeconómico aplicado al holding. Posturas ejecutivas, KPIs y diagnóstico por unidad de negocio.</div>
+    </div>
+    <div class="sl sl-green">Posturas ejecutivas</div>
+    <div id="posturas-list"></div>
+    <div class="sl sl-olive">KPIs del Cuadro de Mando Energético</div>
+    <div id="kpis-energia-list"></div>
+    <div class="sl sl-green">Diagnóstico por unidad de negocio</div>
+    <div class="pitem"><div class="plabel">Palma Aceitera — Smil / Blas</div><div class="ptext">Price-taker global: cotizas en la Bolsa de Malasia. No puedes subir el precio de tu palma porque suba el diésel. La utilidad se defiende reduciendo el costo de flete y consumo por tonelada cosechada. Riesgo alto: logística y poscosecha.</div></div>
+    <div class="pitem"><div class="plabel">Ganadería — Dalio / Smil</div><div class="ptext">Menos intensiva en combustibles pero dependiente del vector hídrico. Si los apagones cortan el bombeo, el sistema de rotación colapsa. Solución: bombeo solar fotovoltaico directo a tanques elevados por gravedad. Cero dependencia de la red del Estado.</div></div>
+    <div class="pitem"><div class="plabel">Inmobiliaria — Greene / Baños</div><div class="ptext">Oportunidad: garantizar energía continua 24/7 captura un Premium de Soberanía sobre el valor de renta. Mientras la ciudad está a oscuras, tus propiedades brillan. Ley 11 Greene: haz que la gente dependa de ti.</div></div>
+    <div class="sl sl-olive">Protocolo de acción — 3 fases</div>
+    <div class="pitem"><div class="plabel">Fase I — Auditoría de Estrés (Días 1-15)</div><div class="ptext">Calcular PSM para cada unidad. Modelar 3 escenarios: +50%, +100%, +150% en costo de diésel y KWh. Identificar qué líneas de producción resisten y cuáles mueren. Mapear VRA en cadena de suministro.</div></div>
+    <div class="pitem"><div class="plabel">Fase II — Anclaje de Soberanía (Días 16-60)</div><div class="ptext">Evaluar CapEx para autogeneración. No por narrativa ambiental — por arbitraje financiero y continuidad operativa. Indexar cláusulas de variabilidad energética en contratos nuevos.</div></div>
+    <div class="pitem"><div class="plabel">Fase III — Arbitraje de Ineficiencia (Días 61+)</div><div class="ptext">Monopolio de la certeza: usar la estabilidad operativa como arma comercial. Absorber clientes y contratos que competidores dejan disponibles al apagarse por falta de previsión energética. Meta ICA: +15% clientes por trimestre.</div></div>
+  </div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- ORÁCULO -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="page-oraculo" class="page safe-pad">
+  <div class="card card-accent-green" style="margin-bottom:10px;">
+    <div style="font-size:12px;color:var(--text2);line-height:1.55;">Tu carta astral + los 9 libros maestros como un solo marco integrado. Describe una situación — el oráculo responde citando tanto la configuración astral como el autor que aplica.</div>
+  </div>
+  <div class="mod-tabs">
+    <button class="mt active" onclick="goSub('oraculo','situacion',this)">Situación</button>
+    <button class="mt" onclick="goSub('oraculo','termino',this)">Término</button>
+    <button class="mt" onclick="goSub('oraculo','doc',this)">Integrar doc</button>
+  </div>
+
+  <div id="sub-oraculo-situacion" class="sub active">
+    <label class="dlabel">Describe la situación</label>
+    <textarea id="or-sit" style="min-height:90px;" placeholder="Ej: Estoy sintiendo el impulso de justificarme ante alguien. ¿Qué me dice mi carta y mis libros sobre esto?"></textarea>
+    <select id="or-marco" style="margin-bottom:6px;">
+      <option value="ambos">Ambos marcos (recomendado)</option>
+      <option value="39">Solo Operación 39</option>
+      <option value="energetico">Solo carta astral</option>
+      <option value="estrategico">Solo campo estratégico</option>
+    </select>
+    <button class="sbtn sbtn-dark" onclick="analizarSit()">Analizar con oráculo</button>
+    <div class="ai-out" id="or-sit-out"><div class="ai-tag">Oráculo MEB Jiménez</div><div class="ai-text" id="or-sit-text"></div></div>
+  </div>
+
+  <div id="sub-oraculo-termino" class="sub">
+    <label class="dlabel">Término a consultar</label>
+    <input type="text" id="or-term" placeholder="Ej: Fudoshin, Nodo Crítico, Soberanía erótica...">
+    <button class="sbtn sbtn-dark" onclick="consultarTerm()">Consultar</button>
+    <div class="ai-out" id="or-term-out"><div class="ai-tag">Definición aplicada</div><div class="ai-text" id="or-term-text"></div></div>
+  </div>
+
+  <div id="sub-oraculo-doc" class="sub">
+    <div class="card" style="margin-bottom:8px;"><div style="font-size:12px;color:var(--text2);line-height:1.55;">Pega un análisis de Gemini u otra herramienta. Claude extrae lo nuevo, elimina redundancias, no mezcla módulos.</div></div>
+    <label class="dlabel">Contenido externo</label>
+    <textarea id="or-doc" style="min-height:100px;" placeholder="Pega aquí el texto de tu análisis externo..."></textarea>
+    <select id="or-doc-marco" style="margin-bottom:6px;">
+      <option value="39">Operación 39 / vida personal</option>
+      <option value="estrategico">Campo estratégico / negocios</option>
+      <option value="energetico">Campo energético / espiritual</option>
+      <option value="nuevo">Nuevo campo</option>
+    </select>
+    <button class="sbtn sbtn-dark" onclick="integrarDoc()">Integrar sin redundar</button>
+    <div class="ai-out" id="or-doc-out"><div class="ai-tag">Integración completada</div><div class="ai-text" id="or-doc-text"></div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SOS -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="page-sos" class="page safe-pad">
+  <button class="sos-big" onclick="sosRand()">⚡ ACTIVAR ANCLAJE DE EMERGENCIA</button>
+  <div class="sl sl-green">Elige tu situación</div>
+  <div class="sos-grid">
+    <div class="sos-card" onclick="sos(0)"><div class="sos-title">Quiero escribirle</div><div class="sos-sub">Impulso de contactar</div></div>
+    <div class="sos-card" onclick="sos(1)"><div class="sos-title">Siento culpa</div><div class="sos-sub">Deuda emocional activa</div></div>
+    <div class="sos-card" onclick="sos(2)"><div class="sos-title">Quiero ir a Quito</div><div class="sos-sub">Dopamina barata</div></div>
+    <div class="sos-card" onclick="sos(3)"><div class="sos-title">Perdí el enfoque</div><div class="sos-sub">Dispersión mental</div></div>
+    <div class="sos-card" onclick="sos(4)"><div class="sos-title">Me bloqueó / ignoró</div><div class="sos-sub">Test de dominancia</div></div>
+    <div class="sos-card" onclick="sos(5)"><div class="sos-title">Modo Padilla activo</div><div class="sos-sub">Urgencias dominando</div></div>
+  </div>
+  <div class="sos-resp" id="sos-resp">
+    <div class="sos-tag" id="sos-tag"></div>
+    <div class="sos-text" id="sos-text"></div>
+    <div class="sos-action" id="sos-action"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+
+const FRASES = [
+  '"El hombre superior no trabaja en su masculinidad — trabaja en su misión. La masculinidad es el subproducto natural de un hombre completamente enfocado en construir algo que importa."',
+  '"Construir la máquina, no ser un engranaje de ella. Mi Densidad Ejecutiva define mi legado, no mis horas en campo."',
+  '"En el juego de la manipulación, la única forma de ganar es rompiendo el tablero. Mi silencio no es orgullo inmaduro; es el estándar de un hombre que sabe lo que vale."',
+  '"No soy un deudor emocional. No viajo a Quito a compensar errores inexistentes. Mi trabajo en la tierra es sagrado."',
+  '"El deseo nace en la distancia. Mi ausencia es el oxígeno que el fuego necesita para volver a arder."',
+  '"Soy el capitán de mi barco. Mi madre, mi hija Alissa y mis fincas son mi tripulación. Quien quiera subir debe aceptar mi ruta."',
+  '"Mi valor no se mide en lo que evito sino en lo que construyo. Hacienda Pantanal, Alissa, el patrimonio — eso es mi identidad."',
+  '"El Vector Greene es el movimiento que construye poder de forma no obvia. Mi arquitectura digital es mi ventaja invisible sobre el sector."'
+];
+
+const FC_39 = [
+  {tag:"Operación 39 — Erotismo",q:"¿Qué es la 'Soberanía Erótica'?",a:"Control absoluto de tu identidad, misterio y atractivo sin dejarte moldear por las exigencias del otro.",ap:"Tu selectividad y blindaje de vida privada ejecutan este principio."},
+  {tag:"Operación 39 — Estrategia",q:"Define 'Vacío de tierra'.",a:"Retirar por completo presencia, palabras y energía ante una falta de respeto. Contacto cero absoluto.",ap:"No es orgullo — es el peso de tu ausencia."},
+  {tag:"Operación 39 — Estrategia",q:"¿Qué es la 'Deuda emocional histórica'?",a:"Mecanismo que usa errores del pasado para controlar tus decisiones hoy. No eres un deudor emocional eterno.",ap:"El pasado es una transacción cerrada."},
+  {tag:"Operación 39 — Estrategia",q:"¿Qué es un 'Test de congruencia'?",a:"Prueba (berrinche, bloqueo, silencio) para medir si tu eje masculino es sólido o se dobla ante la presión.",ap:"Tu respuesta correcta: ninguna reacción visible."},
+  {tag:"Operación 39 — Adicción",q:"¿Qué es la 'Dopamina barata'?",a:"Impulso que te empuja a romper tus límites para calmar la ansiedad inmediata. Siempre tiene costo alto a largo plazo.",ap:"Viajar a Quito a medianoche. Mandar el primer mensaje. Justificarte. Todos son la misma trampa."},
+  {tag:"Operación 39 — Adicción",q:"¿Qué es el 'Contrato latente' (Glover)?",a:"Acuerdo invisible: hago lo que quieres a cambio de que satisfagas mis necesidades sin pedírtelo. El tipo lindo siempre pierde.",ap:"La congruencia real no negocia en silencio — comunica directo."},
+  {tag:"Operación 39 — Propósito",q:"¿Qué es la 'Preselección evolutiva'?",a:"Un hombre en paz y exitoso se vuelve más deseable automáticamente — no por buscarlo sino por estar enfocado en su misión.",ap:"No se construye siendo alfa. Se construye siendo imparable en tu propósito."},
+  {tag:"Operación 39 — Combate",q:"¿Qué es 'Fudoshin'?",a:"Mente inamovible del samurái. No se perturba ante elogio ni desprecio. Ver un bloqueo sin que se altere el pulso.",ap:"Tu oficina en Santo Domingo. El registro de producción. Eso es Fudoshin."}
+];
+
+const FC_EST = [
+  {tag:"Campo estratégico — Smil",q:"¿Qué es la 'Exposición Smil'?",a:"Vulnerabilidad al costo energético como % del costo total de producción.",ap:"Hacienda Pantanal: diésel = exposición alta. Meta: reducir 8% en 12 meses."},
+  {tag:"Campo estratégico — Blas",q:"¿Qué es el 'Punto de Fuga Blas'?",a:"El eslabón donde más valor escapa hacia intermediarios. Identificarlo y controlarlo.",ap:"¿Tus compradores actuales capturan valor que debería ser tuyo?"},
+  {tag:"Campo estratégico — Baños",q:"¿Qué es un 'Nodo Crítico Baños'?",a:"Persona o sistema cuya falla desestabiliza la operación de forma no lineal.",ap:"Oliver Cedeño es el Nodo Crítico actual. Redundancia = documentación alternativa."},
+  {tag:"Campo estratégico — Dalio",q:"¿Qué es la 'Densidad Ejecutiva'?",a:"Ratio de decisiones estratégicas vs. tiempo en operación táctica. Meta: 60/40.",ap:"Si llevas semanas en campo sin decisiones estratégicas, activar protocolo."},
+  {tag:"Campo estratégico — Dalio",q:"¿Qué es el 'Modo Padilla'?",a:"Estado reactivo donde las urgencias dominan sobre las prioridades estratégicas.",ap:"Meta: menos de 2 semanas por trimestre en este modo."},
+  {tag:"Campo estratégico — Greene",q:"¿Qué es un 'Vector Greene'?",a:"Movimiento que construye posición de poder de forma no obvia.",ap:"Tu arquitectura digital es un Vector Greene: el sector no lo ve venir."}
+];
+
+const FC_ENER = [
+  {tag:"Campo energético — Sol Tauro Casa 12",q:"¿Cuál es la paradoja central de la carta de Oscar?",a:"Busca seguridad material (Tauro) pero la Casa 12 lo empuja a lo espiritual. La estabilidad real viene del servicio y la introspección.",ap:"Hacienda Pantanal como legado — no solo como activo financiero."},
+  {tag:"Campo energético — Luna Acuario",q:"¿Cómo reacciona Oscar ante el control en una relación?",a:"Retiro inmediato. La Luna en Acuario necesita libertad absoluta. Control o celos = retiro instintivo.",ap:"La incompatibilidad con Erika es estructural, no circunstancial."},
+  {tag:"Campo energético — Nodo Norte Aries",q:"¿Cuál es la misión kármica de Oscar?",a:"Desarrollar decisión independiente y firme. Decir 'No' sin buscar aprobación. De Libra (diplomacia) a Aries (liderazgo).",ap:"Operación 39 y la carta señalan el mismo reto. No es coincidencia — es evolución."},
+  {tag:"Campo energético — Plutón Casa 5",q:"¿Qué advierte Plutón en Casa 5?",a:"La intensa energía sexual y creativa debe canalizarse en expresión artística para evitar luchas de poder en el romance.",ap:"La inteligencia erótica de Perel tiene base astrológica aquí."},
+  {tag:"Campo energético — Casa 12 Géminis",q:"¿Cuál es la advertencia de comunicación más crítica?",a:"Precaución extrema en contratos y comunicaciones escritas. Las palabras pueden usarse en tu contra en disputas legales.",ap:"Leer antes de firmar — siempre. Cualquier acuerdo con parientes o socios."}
+];
+
+const TRAIN = [
+  {sit:"Llevas 12 días sin contacto. A las 11pm recibes una notificación — ella te desbloqueó en WhatsApp sin escribirte.",preg:"¿Cuál es el movimiento correcto del hombre congruente?",opts:["Escribirle inmediatamente — el gesto ya es señal","Esperar 2 días y escribir algo casual","Nada. Si quiere hablar, tiene tu número","Publicar algo interesante en redes"],c:2,ok:"Exacto. El desbloqueo silencioso es un test de congruencia (Kay). Cualquier movimiento tuyo confirma que estabas monitoreando. Fudoshin: el pulso no sube.",fail:"Eso es monitoreo activo disfrazado de estrategia. Ella no hizo nada concreto. Tu energía va a las fincas, no a interpretar gestos."},
+  {sit:"Un amigo bien intencionado te dice: 'Hombre, ya pasaron semanas. ¿Por qué no le dices que lo sientes? La vida es corta.'",preg:"¿Cómo responde el hombre que opera desde su propósito?",opts:["Le explica toda la situación en detalle","'Tienes razón, voy a pensarlo'","Escucha, agradece, y no cambia nada de su posición","Le muestra el protocolo para que entienda"],c:2,ok:"Preciso. La congruencia conductual (Bryans) no se negocia con presión social. El eje inamovible no se mueve por opiniones externas, aunque vengan con buena intención.",fail:"Cualquier otra respuesta implica buscar validación externa para tu posición interna. El hombre superior no necesita que su entorno apruebe sus decisiones."},
+  {sit:"Oliver te avisa que no puede cubrir Andino esta semana. Tienes reunión con compradores el viernes.",preg:"¿Cuál es tu análisis estratégico correcto?",opts:["Ir tú mismo a cubrir la operación","Cancelar la reunión con compradores","Identificar el Nodo Crítico y activar redundancia. La reunión sigue.","Esperar y ver qué pasa"],c:2,ok:"Correcto. Oliver es el Nodo Crítico (Baños). Esta situación activa el protocolo de redundancia — no tu presencia en campo. El ejecutivo resuelve sistemas, no cubre operaciones.",fail:"Cubrirlo tú destruye tu Densidad Ejecutiva (Dalio). Eres el arquitecto, no el albañil."},
+  {sit:"El costo del diésel subió 15% este mes. Tus márgenes se comprimen significativamente.",preg:"¿Qué concepto de Smil describe esta vulnerabilidad y cuál es la dirección correcta?",opts:["Punto de Fuga Blas — renegociar con proveedores","Exposición Smil — camino es reducirla con energía propia","Modo Padilla — es una urgencia operativa","Nodo Crítico — el proveedor de diésel"],c:1,ok:"Exacto. Exposición Smil: tu margen depende del precio de energía externa. La dirección es reducir esa dependencia con energía propia — meta: ≥20% en 18 meses.",fail:"La Exposición Smil mide precisamente esto. La respuesta táctica (renegociar) alivia el síntoma; la respuesta estratégica (energía propia) resuelve la vulnerabilidad estructural."},
+  {sit:"Llevas 3 semanas resolviendo urgencias operativas en campo. No has tomado ninguna decisión estratégica.",preg:"¿Qué estado describe esto y cuál es el protocolo de salida?",opts:["Vector Greene — estás construyendo posición","Fudoshin — es parte del proceso","Modo Padilla — activar protocolo: una decisión estratégica esta semana","Capital Sistémico bajo — normal"],c:2,ok:"Correcto. Modo Padilla activo. Protocolo: identificar UNA decisión estratégica esta semana y reservar 30 minutos para tomarla. El miércoles es tu día de decisión profunda.",fail:"El Modo Padilla es exactamente esto: urgencias secuestrando la agenda estratégica. No es normal — es la principal amenaza a tu Densidad Ejecutiva."},
+  {sit:"Recibes un mensaje de Erika que dice: 'Pensé que eras diferente. Decepción total.'",preg:"¿Qué maniobra táctica identifica este mensaje?",opts:["Una disculpa indirecta — quiere reconciliarse","Test de congruencia usando deuda emocional — tu respuesta es ninguna","Una señal de que genuinamente está herida","Un error que ella cometió y hay que aprovechar"],c:1,ok:"Correcto. Test de congruencia clásico usando culpa y deuda emocional (Kay + Glover). Busca que te justifiques, que reacciones, que demuestres que el silencio te afectó. Fudoshin: el pulso no sube.",fail:"Cualquier respuesta — incluyendo ignorarlo conscientemente — es todavía darle energía mental. El hombre que opera desde su propósito ya está pensando en otra cosa."}
+];
+
+const SOS_DATA = [
+  {tag:"Vacío de tierra activado",text:'"En el juego de la manipulación, la única forma de ganar es rompiendo el tablero. Mi silencio no es orgullo inmaduro; es el estándar de un hombre que sabe lo que vale."',action:"Acción: Cierra el chat. Abre Siigo o Agrosoft. Pon los ojos en tus números reales. El hombre de alto valor se mide en lo que produce."},
+  {tag:"Cierre contable",text:'"No soy un deudor emocional. El pasado es una transacción cerrada. Ningún error pasado me obliga a ceder hoy."',action:"Acción: Escribe en papel qué valor real aporta este impulso a tu patrimonio. Si la respuesta es cero, la respuesta es silencio."},
+  {tag:"Anclaje de tierra",text:'"Mi trabajo en la tierra es sagrado y no se subasta por migajas de afecto. No viajo a Quito a compensar errores inexistentes."',action:"Acción: Llama a Oliver o a Diana. Enfócate en una decisión real de las fincas ahora mismo."},
+  {tag:"Norte magnético restaurado",text:'"Soy el capitán de mi barco. Mi madre, mi hija Alissa y mis fincas son mi tripulación. Quien quiera subir debe aceptar mi ruta."',action:"Acción: Abre tu lista de metas. Lee la primera. Eso es lo que importa hoy."},
+  {tag:"Fudoshin — mente inamovible",text:'"El bloqueo es el castigo. Mi silencio es la muralla. El guerrero invencible no sale de su trinchera a perseguir al que huyó."',action:"Acción: Respira 4 tiempos. El pulso no sube. Vuelve a tu escritorio. La respuesta correcta es ninguna."},
+  {tag:"Modo Padilla — salida",text:'"Construir la máquina, no ser un engranaje de ella. Mi Densidad Ejecutiva es mi legado. Una decisión estratégica hoy."',action:"Acción: Identifica UNA decisión estratégica que has postergado. Reserva 30 minutos ahora para tomarla."}
+];
+
+const LIB_39 = [
+  {titulo:"Inteligencia Erótica / El Dilema de la Pareja",autor:"Esther Perel",terminos:[
+    {t:"Oxígeno biológico del deseo",d:"Espacio y distancia necesarios para que la atracción no se asfixie.",a:"Tus tres bases geográficas son estrategia erótica, no solo logística."},
+    {t:"Soberanía erótica",d:"Control de tu identidad y misterio sin dejarte moldear por las exigencias del otro.",a:"Tu selectividad y blindaje de vida privada ejecutan este principio."},
+    {t:"Preservar la otredad",d:"La pareja es un ser independiente al que hay que seguir conquistando.",a:"Cualquier relación que elimine tu autonomía viola este principio estructuralmente."}
+  ]},
+  {titulo:"Más sabio que el Diablo",autor:"Gary John Bishop",terminos:[
+    {t:"Narrativa de autosabotaje",d:"Historia ficticia que justifica volver al ciclo de dolor.",a:"'Ella es la única que encaja.' Se destruye con hechos: Natalia, tus fincas, Alissa."},
+    {t:"Eje inamovible",d:"Solidez interna que impide que factores externos muevan tus prioridades.",a:"Tu pulso no sube ante bloqueos. Tu agenda no cambia ante dramas."}
+  ]},
+  {titulo:"Basta ya de ser un tipo lindo",autor:"Robert Glover",terminos:[
+    {t:"Contrato latente",d:"Acuerdo invisible: sacrifico mi propósito a cambio de aprobación no pedida directamente.",a:"El tipo lindo siempre pierde porque opera desde deshonestidad consigo mismo."},
+    {t:"Necesidades directas",d:"Expresar lo que necesitas sin rodeos ni manipulación indirecta.",a:"La congruencia real comunica directo — no negocia en silencio."}
+  ]},
+  {titulo:"The Married Man Sex Life Primer",autor:"Athol Kay",terminos:[
+    {t:"Preselección evolutiva",d:"Un hombre en paz y exitoso se vuelve más deseable automáticamente.",a:"No se construye siendo alfa. Se construye siendo imparable en tu propósito."},
+    {t:"Test de congruencia",d:"Prueba (bloqueo, berrinche) que mide si tu eje masculino es sólido.",a:"Tu respuesta correcta: Fudoshin. El pulso no sube."}
+  ]},
+  {titulo:"El Camino del Hombre Superior",autor:"David Deida",terminos:[
+    {t:"Misión de vida sobre relación",d:"El propósito central permanece inalterable ante cualquier tormenta emocional.",a:"Hacienda Pantanal, Alissa, el patrimonio — eso no se negocia."},
+    {t:"Presencia masculina plena",d:"El mayor regalo del hombre a su entorno es su presencia total y enfocada.",a:"Cuando estás en las fincas completamente presente, eso ya es el trabajo."}
+  ]},
+  {titulo:"El Varón Domado",autor:"Esther Vilar",terminos:[
+    {t:"Monopolio sexual afectivo",d:"Control del acceso al placer como sistema de premios y castigos.",a:"El bloqueo es el castigo. La reconciliación es el premio condicionado."},
+    {t:"Deuda emocional histórica",d:"Uso del pasado lejano para controlar decisiones del presente.",a:"No eres un deudor emocional eterno de una versión de ti que ya no existe."}
+  ]},
+  {titulo:"Hombres en la mira / Sé el hombre que toda mujer desea",autor:"Bruce Bryans",terminos:[
+    {t:"Congruencia conductual",d:"Alineación perfecta entre lo que dices, lo que vales y lo que haces.",a:"La prueba definitiva es sostenerlo con acciones consistentes en el tiempo."},
+    {t:"Vacío de tierra",d:"Retirar completamente presencia, palabras y energía ante una falta de respeto.",a:"Tu ausencia tiene peso propio. No es una táctica — es un estándar."}
+  ]},
+  {titulo:"Arte de la Guerra / Cinco Anillos / Bushido",autor:"Sun Tzu · Musashi · Nitobe",terminos:[
+    {t:"Fudoshin — Mente inamovible",d:"Estado del guerrero que no se perturba ante elogio ni desprecio.",a:"Ver un bloqueo o un drama sin que se altere el pulso en la oficina."},
+    {t:"Economía de movimiento",d:"No hacer nada que sea inútil. Cada acción construye posición.",a:"Tu inexistencia ante Erika es economía de movimiento, no pasividad."}
+  ]}
+];
+
+const LIB_EST = [
+  {titulo:"Energía y civilización / Los números no mienten",autor:"Vaclav Smil",terminos:[
+    {t:"Exposición Smil",d:"Vulnerabilidad al costo energético como % del costo total de producción.",a:"Diésel = exposición alta. Meta: reducir 8% en 12 meses con energía propia."},
+    {t:"Densidad Termodinámica del Negocio (DTN)",d:"Cantidad de energía requerida por cada dólar de utilidad neta generada. DTN = Utilidad Neta / Consumo Total Energía.",a:"Palma aceitera: optimizar el flete y la cosecha reduce la DTN. Más USD por cada galón de diésel invertido."},
+    {t:"Price-taker global",d:"Productor que no puede fijar su precio de venta porque lo determina el mercado internacional. La palma cotiza en la Bolsa de Malasia (MDEX).",a:"No puedes subir el precio de tu palma porque suba el diésel en Ecuador. La utilidad se defiende reduciendo costos, no subiendo precios."}
+  ]},
+  {titulo:"El mundo está en venta",autor:"Javier Blas",terminos:[
+    {t:"Punto de Fuga Blas",d:"Eslabón donde más valor escapa hacia intermediarios.",a:"Identifica si tus compradores actuales capturan valor que debería ser tuyo."},
+    {t:"Exposición al Trader Flotante (ETF)",d:"Vulnerabilidad de tu cadena de suministro ante la volatilidad diaria de precios internacionales de combustibles liberados.",a:"IES meta: < 20% de insumos comprados a precio spot. El resto debe tener cobertura o almacenamiento estratégico."},
+    {t:"Arbitraje de Ineficiencia",d:"Captura sistemática de clientes, proveedores o contratos dejados disponibles cuando competidores se paralizan por crisis energética.",a:"Mientras el mercado se queja, tú absorbes: ICA meta = +15% clientes por trimestre durante contracción del sector."}
+  ]},
+  {titulo:"Así se domina el mundo",autor:"Pedro Baños",terminos:[
+    {t:"Nodo Crítico Baños",d:"Persona cuya falla desestabiliza la operación de forma no lineal.",a:"Oliver Cedeño es el Nodo Crítico actual. Redundancia = prioridad."},
+    {t:"Vulnerabilidad de Red Absoluta (VRA)",d:"Porcentaje de ingresos del holding que depende directamente del suministro eléctrico estatal o combustibles no subsidiados.",a:"Reducción sistemática: cada unidad de negocio mapea su VRA. La meta es hacerla converger hacia cero en procesos críticos."},
+    {t:"Vector energético de poder",d:"La energía es el instrumento de control político más efectivo. Quien la controla, controla la movilidad, producción y capacidad de protesta.",a:"El subsidio nunca fue política energética — fue instrumento de gobernabilidad. Su eliminación es pérdida de herramienta de control, no reforma estructural."}
+  ]},
+  {titulo:"El continente dormido",autor:"Alberto Padilla",terminos:[
+    {t:"Letargo de Consenso",d:"Parálisis operativa y financiera que sufren competidores por nostalgia psicológica de los subsidios eliminados.",a:"A mayor Letargo de Consenso en tu sector, mayor ventana de oportunidad para captura de mercado. Es un indicador contrario."},
+    {t:"Síndrome de adultez económica",d:"Incapacidad institucional de implementar reformas de largo plazo sin revertirlas ante primera presión social.",a:"Ecuador tendrá ciclos de avance y retroceso en política energética. Planifica sobre esa volatilidad, no contra ella."},
+    {t:"Punto de Sinceramiento de Margen (PSM)",d:"Umbral matemático exacto en que el incremento de tarifas energéticas destruye el margen neto antes de poder trasladarlo al cliente.",a:"Calcular PSM para cada unidad: ¿qué % de incremento en diésel destruye el margen de palma? ¿El de ganadería? ¿El de inmobiliaria?"}
+  ]},
+  {titulo:"Principios / Nuevo orden mundial",autor:"Ray Dalio",terminos:[
+    {t:"Densidad Ejecutiva",d:"Ratio decisiones estratégicas vs. tiempo en operación táctica. Meta: 60/40.",a:"Si llevas semanas en campo sin decisiones estratégicas, activar protocolo."},
+    {t:"Modo Padilla",d:"Estado reactivo donde urgencias dominan sobre prioridades.",a:"Meta: menos de 2 semanas por trimestre en este modo."},
+    {t:"Anclaje de Soberanía Energética (ASE)",d:"Capacidad instalada autónoma que permite operar al 100% durante colapso o racionamiento de la red pública. ASE = Horas con energía propia / Horas totales requeridas × 100.",a:"Meta: >85% en procesos críticos. Ganadería: bombeo solar a tanques elevados por gravedad. Sin baterías caras, sin red del Estado."},
+    {t:"Ciclo de deuda soberana",d:"Acumulación de deuda insostenible → ajuste fiscal forzado → dolor social → presión política → posible reversión populista.",a:"Ecuador está en fase de ajuste forzado, no reforma estructural. Diferencia crítica: la reversión populista en el próximo ciclo electoral es un escenario probable."}
+  ]},
+  {titulo:"Las 48 leyes del poder",autor:"Robert Greene",terminos:[
+    {t:"Vector Greene",d:"Movimiento que construye posición de poder de forma no obvia.",a:"Tu arquitectura digital es un Vector Greene: el sector no lo ve venir."},
+    {t:"Fortaleza de la Postura Impenetrable (FPI)",d:"Capacidad de mantener reputación de solidez y control ocultando cualquier vulnerabilidad operativa interna. Ley 5: casi todo depende de la reputación.",a:"En reuniones gremiales y familiares: postura de análisis frío, nunca de queja. El poder se nutre de la percepción de imperturbabilidad."},
+    {t:"Premium de Soberanía",d:"Valor adicional que captura un activo inmobiliario que garantiza energía continua 24/7 cuando la red pública falla. Ley 11: haz que la gente dependa de ti.",a:"Departamentos con generación interna = activos con resiliencia de red. Mientras la ciudad está a oscuras, tus propiedades cobran prima."}
+  ]}
+];
+
+// MANIFIESTO DE SOBERANÍA ENERGÉTICA — KPIs ejecutivos
+const KPIS_ENERGIA = [
+  {nombre:"Densidad Termodinámica del Negocio (DTN)",marco:"Vaclav Smil",formula:"Utilidad Neta (USD) / Consumo Total Energía (KWh)",meta:"Maximizar continuamente",frecuencia:"Mensual",desc:"Generar más USD por cada unidad física de energía invertida."},
+  {nombre:"Anclaje de Soberanía Energética (ASE)",marco:"Ray Dalio",formula:"(Horas con energía propia / Horas totales requeridas) × 100",meta:"> 85% en procesos críticos",frecuencia:"Mensual",desc:"Operación continua durante colapso de la red pública."},
+  {nombre:"Índice de Exposición Spot (IES)",marco:"Javier Blas",formula:"(Insumos comprados a precio spot / Total insumos energéticos) × 100",meta:"< 20%",frecuencia:"Quincenal",desc:"Mitigar riesgo con contratos de cobertura o almacenamiento físico."},
+  {nombre:"Impacto Energético sobre Margen (IEM)",marco:"Ray Dalio",formula:"(Costo Total Energía y Combustibles / Margen Bruto Total) × 100",meta:"< 7%",frecuencia:"Quincenal",desc:"Estabilizado bajo predictibilidad financiera."},
+  {nombre:"Índice de Captura por Arbitraje (ICA)",marco:"Robert Greene",formula:"(Nuevos clientes durante crisis de competencia / Total prospección) × 100",meta:"+15% trimestral en fase contracción",frecuencia:"Trimestral",desc:"Absorber clientes que competidores dejan disponibles por falta de previsión energética."},
+  {nombre:"Vulnerabilidad de Cadena (VC)",marco:"Pedro Baños",formula:"(Proveedores clave sin plan contingencia / Total proveedores críticos) × 100",meta:"0%",frecuencia:"Semestral",desc:"Reemplazar tácticamente proveedores críticos con alta vulnerabilidad estructural."}
+];
+
+// POSTURAS EJECUTIVAS para conversaciones de alto nivel
+const POSTURAS = [
+  {contexto:"Cuando alguien habla del combustible como problema del gobierno",postura:"La energía es un vector de seguridad nacional, no una variable de populismo económico. La crisis actual es la consecuencia natural de décadas sin diversificar la matriz y sin mantener infraestructura crítica.",marco:"Pedro Baños"},
+  {contexto:"Cuando alguien defiende los subsidios",postura:"El fin de los subsidios es el fin de una ilusión insostenible. Ningún país despierta de su letargo económico subsidiando el consumo en lugar de incentivar la producción eficiente. El precio real es el precio de la adultez económica.",marco:"Alberto Padilla"},
+  {contexto:"Cuando alguien dice que el gobierno nos roba con el combustible",postura:"El subsidio nunca fue gratis — lo pagábamos con deuda que ahora vence. El problema no es el precio actual; es que durante 50 años el precio artificial nos impidió innovar en eficiencia energética.",marco:"Vaclav Smil"},
+  {contexto:"Cuando alguien pregunta cómo te afecta la crisis energética",postura:"La política y la ideología siempre se estrellarán contra las leyes de la termodinámica. Los números no mienten; el resto es narrativa. Nosotros ya corrimos los números.",marco:"Vaclav Smil"},
+  {contexto:"Cuando hablan del precio del petróleo o commodities",postura:"El mundo está en venta y la energía tiene dueños globales bien definidos. Pretender que el Estado puede aislarnos de las mesas de trading internacionales es ingenuidad corporativa peligrosa.",marco:"Javier Blas"},
+  {contexto:"Cuando el entorno está paralizado y confundido",postura:"Estamos viviendo la transición típica de un ciclo económico desgastado. Los únicos que prosperan en estos cambios son los actores que no dependen del Estado, sino los que hacen sus máquinas operativas autosostenibles.",marco:"Ray Dalio"}
+];
+
+const PRACTICAS = [
+  {n:"Meditación / silencio",d:"Casa 12 — exploración del subconsciente. Mín. 10 min."},
+  {n:"Movimiento físico",d:"Marte Géminis — drenaje de tensión nerviosa obligatorio."},
+  {n:"Contacto con la tierra / fincas",d:"Sol Tauro — tu medicina energética natural."},
+  {n:"Lectura o expansión mental",d:"Luna Casa 9 — bienestar por expansión intelectual."},
+  {n:"Revisión de contratos",d:"Casa 12 Géminis — protección activa. Lee antes de firmar."},
+  {n:"Momento de servicio o legado",d:"Sol Casa 12 — misión espiritual más profunda."}
+];
+
+const PERFIL_ORACULO = `Eres el oráculo personal de Ing. Oscar Jiménez, 39 años, Ecuador. Empresario agrícola (Hacienda Pantanal, palma africana, Quinindé, ~170 ha, +21.000 plantas, fincas Los Corrales, Andino, Castañeda, Chipo, Marujita) y ganadero en Santo Domingo. Empresa: Agroinverpac Cía. Ltda. Gerente General: Diana Fernanda (hermana). Técnico: Oliver Cedeño (Nodo Crítico). Hija: Alissa.
+
+PRINCIPIO CENTRAL: El hombre de alto valor no trabaja en su masculinidad — trabaja en su misión. La masculinidad es el subproducto natural de un hombre completamente enfocado en construir algo que importa. El trabajo no es "ser más alfa" — es construir más.
+
+CARTA ASTRAL COMPLETA:
+- Sol Tauro (Casa 12): identidad práctica empujada a lo espiritual. Verdadera estabilidad en el servicio desinteresado.
+- Ascendente Géminis: proyección dinámica, ingenio agudo. Riesgo: dispersión y nerviosismo.
+- Luna Acuario (Casa 9): seguridad en libertad. Control o celos = retiro inmediato. Bienestar en expansión mental.
+- Venus Tauro (Casa 11): leal, sensual, estable. Riesgo: ser explotado por querer complacer.
+- Marte Géminis (Casa 1): energía desbordante. Ejercicio físico obligatorio.
+- Casa 7 (Capricornio + Urano): relaciones como experimentos. Control = resistencia inmediata.
+- Plutón (Casa 5): canalizar energía sexual en creatividad, no en luchas de poder.
+- Neptuno (Casa 8): ética financiera impecable. Opacidad = reveses espirituales.
+- Nodo Norte Aries: misión = decisión independiente y liderazgo firme. De Libra (buscar aprobación) a Aries (decidir solo).
+TENSIONES: Sol Tauro vs. Casa 12 / Luna Acuario vs. Venus Tauro / Ascendente Géminis vs. Modalidad Fija / Nodo Norte Aries vs. Nodo Sur Libra.
+ADVERTENCIAS: Casa 12 Géminis (contratos peligrosos — leer antes de firmar) / Marte Casa 1 (ejercicio obligatorio, accidentes por impulsividad).
+
+LIBROS MAESTROS — MARCOS DE ANÁLISIS:
+
+ESTHER PEREL (Inteligencia Erótica / El Dilema de la Pareja): El deseo necesita distancia y misterio. Soberanía erótica: control de identidad y misterio sin dejarse moldear. Las tres bases geográficas (SD, Quinindé, Quito) son estrategia erótica.
+
+GARY JOHN BISHOP (Más sabio que el Diablo): Destruir la narrativa de autosabotaje con hechos. Eje inamovible: solidez interna que impide que factores externos muevan las prioridades.
+
+ROBERT GLOVER (Basta ya de ser un tipo lindo): Eliminar contratos latentes. Necesidades directas sin manipulación indirecta. El tipo lindo opera desde deshonestidad consigo mismo.
+
+ATHOL KAY (The Married Man Sex Life Primer): Valor Alfa (liderazgo, propósito) + Valor Beta (apoyo, provisión) en equilibrio. Preselección evolutiva: el hombre enfocado en su misión se vuelve deseable sin buscarlo. Test de congruencia: pruebas que miden solidez del eje masculino.
+
+ESTHER VILAR (El Varón Domado): Monopolio sexual afectivo como sistema de premios y castigos. Deuda emocional histórica: usar el pasado para controlar el presente.
+
+DAVID DEIDA (El Camino del Hombre Superior): El propósito por encima de la relación. La misión de vida es el Norte magnético inamovible. La presencia masculina plena es el mayor regalo.
+
+BRUCE BRYANS (Hombres en la mira / Sé el hombre que toda mujer desea): Congruencia conductual: alineación entre lo que dices, lo que vales y lo que haces. Vacío de tierra ante faltas de respeto. El hombre de alto valor no persigue ni justifica.
+
+CLÁSICOS MILITARES (Sun Tzu, Musashi, Nitobe): Fudoshin: mente inamovible, no se perturba ante elogio ni desprecio. Economía de movimiento: no hacer nada inútil. El guerrero se asegura primero contra la derrota.
+
+CAMPO ESTRATÉGICO (Smil, Blas, Baños, Dalio, Greene): Exposición Smil, Punto de Fuga Blas, Nodo Crítico (Oliver), Densidad Ejecutiva 60/40, Modo Padilla (<2 semanas/trimestre), Vector Greene (arquitectura digital).
+
+CONEXIONES CLAVE CARTA + LIBROS:
+- Nodo Norte Aries = Congruencia conductual (Bryans) + Propósito sobre relación (Deida) = mismo reto desde ángulos distintos.
+- Luna Acuario (retiro ante control) = Soberanía erótica (Perel) + Desapego del hombre superior (Kay) = respuesta instintiva respaldada por arquitectura energética.
+- Plutón Casa 5 (energía sexual creativa) = Inteligencia erótica (Perel) = canalizar en lugar de convertir en campo de batalla.
+
+GLOSARIO AMPLIADO — MANIFIESTO DE SOBERANÍA ENERGÉTICA (integrar en análisis cuando sea relevante):
+- DTN (Densidad Termodinámica del Negocio): USD de utilidad por unidad de energía consumida. Maximizar continuamente.
+- ASE (Anclaje de Soberanía Energética): % horas operadas con energía propia. Meta >85% en procesos críticos.
+- VRA (Vulnerabilidad de Red Absoluta): % ingresos dependientes de la red eléctrica estatal.
+- PSM (Punto de Sinceramiento de Margen): umbral donde el incremento energético destruye el margen neto.
+- IES (Índice de Exposición Spot): % insumos comprados a precio spot. Meta <20%.
+- IEM (Impacto Energético sobre Margen): costo energético / margen bruto. Meta <7%.
+- ICA (Índice de Captura por Arbitraje): clientes capturados durante crisis de competencia. Meta +15% trimestral.
+- VC (Vulnerabilidad de Cadena): % proveedores críticos sin plan de contingencia energética. Meta 0%.
+- Letargo de Consenso: parálisis de competidores por nostalgia de subsidios = tu ventana de oportunidad.
+- Arbitraje de Ineficiencia: absorber clientes/contratos que competidores abandonan durante la crisis.
+- FPI (Fortaleza de la Postura Impenetrable): reputación de solidez y control ante el entorno. Ley 5 Greene.
+- Premium de Soberanía: valor adicional de activo inmobiliario que garantiza energía continua 24/7.
+- Price-taker: la palma cotiza en MDEX (Bolsa de Malasia). No puedes subir precios porque suba el diésel local.
+
+PORTFOLIO ACTUAL: Palma aceitera (Hacienda Pantanal, price-taker global, alta Exposición Smil) + Ganadería de precisión (dependencia hídrica, candidato a bombeo solar) + Inmobiliaria de renta (candidato a Premium de Soberanía).
+
+TONO: Mentor ejecutivo de alto valor + oráculo integrado. Directo, sofisticado, analítico. Sin clichés motivacionales ni esotéricos. Cuando analices, cita tanto la configuración astral como el autor/concepto que aplica. Conecta siempre con la realidad concreta de Oscar. No refuerces la masculinidad como performance — refuerza la construcción como identidad.`;
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+
+let S = {
+  streak:0, xp:0, dominadas_39:[], dominadas_est:[], dominadas_ener:[],
+  desOk:0, trainIdx:0, trainR:false,
+  fcSet:'39', fcIdx:0, fcOpen:false,
+  kpis:{}, dias:[], metas:[],
+  practicas:{}, revisiones:[],
+  glosarioExtra:[]
+};
+
+function loadS(){
+  try{const d=localStorage.getItem('meb-v4');if(d)S=JSON.parse(d);}catch(e){}
+  renderAll();
+}
+function saveS(){try{localStorage.setItem('meb-v4',JSON.stringify(S));}catch(e){}}
+
+function renderAll(){
+  document.getElementById('h-streak').textContent=S.streak||0;
+  document.getElementById('h-xp').textContent=S.xp||0;
+  renderContexto(); renderKpis(); loadDiario();
+  renderFC(); renderTrain();
+  renderMetas(); renderHist(); renderRevHist();
+  renderBiblioteca(); renderPracticas();
+  updateApStats();
+}
+
+// ══════════════════════════════════════════
+// MOTOR CONTEXTUAL INTELIGENTE
+// ══════════════════════════════════════════
+
+function renderContexto(){
+  const ctx = analizarContexto();
+  renderBanner(ctx);
+  renderAlerta(ctx);
+  renderFraseCtx(ctx);
+  renderAccionCtx(ctx);
+}
+
+function analizarContexto(){
+  const ahora = new Date();
+  const hora = ahora.getHours();
+  const diaSemana = ahora.getDay(); // 0=dom, 1=lun... 5=vie
+  const hoy = today();
+
+  // Días sin check-in
+  const diasSinCheckin = calcDiasSin();
+
+  // KPIs de hoy
+  const kpisHoy = S.kpis || {};
+  const kpisOk = [1,2,3,4].filter(k=>kpisHoy[k]===true).length;
+  const kpisFail = [1,2,3,4].filter(k=>kpisHoy[k]===false).length;
+  const kpisCompleto = kpisOk === 4;
+
+  // Estado de la semana (últimos 7 días)
+  const semana = (S.dias||[]).slice(0,7);
+  const promedioKpis = semana.length > 0
+    ? semana.reduce((acc,d)=>{
+        const ok = d.kpis ? [1,2,3,4].filter(k=>d.kpis[k]===true).length : 0;
+        return acc + ok;
+      }, 0) / semana.length
+    : 0;
+
+  // SOS reciente
+  const sosDias = S.sosActivado || 0;
+  const sosFrecuente = sosDias > 2;
+
+  // Revisión pendiente
+  const ultimaRevision = (S.revisiones||[])[0];
+  const revisionPendiente = diaSemana === 5 && (!ultimaRevision || ultimaRevision.fecha !== hoy);
+
+  // Racha
+  const racha = S.streak || 0;
+
+  return {
+    hora, diaSemana, diasSinCheckin,
+    kpisOk, kpisFail, kpisCompleto,
+    promedioKpis, sosFrecuente, revisionPendiente,
+    racha, hoy, semana
+  };
+}
+
+function calcDiasSin(){
+  if(!S.dias||!S.dias.length) return 99;
+  const ultimo = new Date(S.dias[0].fecha);
+  const hoyD = new Date(today());
+  return Math.floor((hoyD - ultimo)/(1000*60*60*24));
+}
+
+function getMomento(hora){
+  if(hora >= 5 && hora < 12) return 'mañana';
+  if(hora >= 12 && hora < 17) return 'tarde';
+  if(hora >= 17 && hora < 21) return 'noche';
+  return 'madrugada';
+}
+
+function renderBanner(ctx){
+  const el = document.getElementById('ctx-banner');
+  const momento = getMomento(ctx.hora);
+  const dias = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const diaName = dias[ctx.diaSemana];
+
+  // Determine state and message
+  let estado = '', color = 'var(--green)', icono = '';
+
+  if(ctx.kpisCompleto){
+    estado = 'Día sostenido · ' + ctx.racha + ' días en racha';
+    icono = '⬛';
+    color = 'var(--green)';
+  } else if(ctx.diasSinCheckin >= 3){
+    estado = ctx.diasSinCheckin + ' días sin registro';
+    icono = '⚠';
+    color = 'var(--red)';
+  } else if(ctx.revisionPendiente){
+    estado = 'Viernes — Revisión ejecutiva pendiente';
+    icono = '📋';
+    color = 'var(--purple)';
+  } else if(ctx.diaSemana === 3){
+    estado = 'Miércoles — Día de decisión profunda';
+    icono = '◆';
+    color = 'var(--olive)';
+  } else if(ctx.diaSemana === 1){
+    estado = 'Lunes — Arranque de semana';
+    icono = '▶';
+    color = 'var(--green)';
+  } else {
+    estado = momento.charAt(0).toUpperCase() + momento.slice(1) + ' · ' + diaName;
+    icono = momento === 'mañana' ? '☀' : momento === 'noche' ? '◐' : '●';
+    color = 'var(--green)';
+  }
+
+  el.innerHTML = \`
+    <div style="background:var(--dark);border-radius:var(--r);padding:14px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:\${color};font-weight:600;margin-bottom:3px;">\${icono} \${estado}</div>
+        <div style="font-size:13px;color:var(--dark-text);font-weight:500;">Oscar Jiménez</div>
+        <div style="font-size:10px;color:#888;margin-top:1px;">Hacienda Pantanal · MEB Jiménez</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:22px;font-weight:700;color:\${color};line-height:1;">\${ctx.racha}</div>
+        <div style="font-size:9px;color:#888;text-transform:uppercase;">días</div>
+      </div>
+    </div>\`;
+}
+
+function renderAlerta(ctx){
+  const el = document.getElementById('ctx-alerta');
+  el.innerHTML = '';
+
+  // Prioridad de alertas
+  if(ctx.diasSinCheckin >= 3){
+    el.innerHTML = \`<div style="background:var(--red-light);border-radius:var(--r);border-left:3px solid var(--red);padding:12px 14px;margin-bottom:8px;">
+      <div style="font-size:10px;text-transform:uppercase;color:var(--red);font-weight:600;margin-bottom:3px;">Reenganche necesario</div>
+      <div style="font-size:12px;color:var(--text);line-height:1.5;">Llevas \${ctx.diasSinCheckin} días sin registrar. El hombre que construye no desaparece de su propio sistema.</div>
+      </div>\`;
+    return;
+  }
+
+  if(ctx.revisionPendiente){
+    el.innerHTML = \`<div style="background:var(--purple-light);border-radius:var(--r);border-left:3px solid var(--purple);padding:12px 14px;margin-bottom:8px;">
+      <div style="font-size:10px;text-transform:uppercase;color:var(--purple);font-weight:600;margin-bottom:3px;">Revisión semanal — Viernes</div>
+      <div style="font-size:12px;color:var(--text);line-height:1.5;">20 minutos. Tres preguntas. Sin drama. Ve a Construir → Revisión.</div>
+      </div>\`;
+    return;
+  }
+
+  if(ctx.diaSemana === 3){
+    el.innerHTML = \`<div style="background:var(--green-light);border-radius:var(--r);border-left:3px solid var(--green);padding:12px 14px;margin-bottom:8px;">
+      <div style="font-size:10px;text-transform:uppercase;color:var(--green);font-weight:600;margin-bottom:3px;">Miércoles — Decisión profunda</div>
+      <div style="font-size:12px;color:var(--text);line-height:1.5;">Una sola decisión estratégica importante. No la lista completa — la número uno.</div>
+      </div>\`;
+    return;
+  }
+
+  if(ctx.promedioKpis < 2 && ctx.semana.length >= 3){
+    el.innerHTML = \`<div style="background:var(--red-light);border-radius:var(--r);border-left:3px solid var(--red);padding:12px 14px;margin-bottom:8px;">
+      <div style="font-size:10px;text-transform:uppercase;color:var(--red);font-weight:600;margin-bottom:3px;">Semana por debajo del eje</div>
+      <div style="font-size:12px;color:var(--text);line-height:1.5;">Promedio de \${ctx.promedioKpis.toFixed(1)}/4 KPIs esta semana. El patrón importa más que el día. ¿Qué está drenando tu energía?</div>
+      </div>\`;
+    return;
+  }
+
+  if(ctx.kpisCompleto){
+    el.innerHTML = \`<div style="background:var(--green-light);border-radius:var(--r);border-left:3px solid var(--green);padding:12px 14px;margin-bottom:8px;">
+      <div style="font-size:10px;text-transform:uppercase;color:var(--green);font-weight:600;margin-bottom:3px;">Día sostenido</div>
+      <div style="font-size:12px;color:var(--text);line-height:1.5;">Los 4 KPIs en verde. Eso no es suerte — es el subproducto de un hombre enfocado en su misión.</div>
+      </div>\`;
+  }
+}
+
+const FRASES_CTX = {
+  mañana: [
+    '"El día pertenece al hombre que lo planifica antes de que empiece. ¿Cuál es tu movimiento más importante hoy?"',
+    '"Cada mañana en las fincas es un voto por la versión de Oscar que está construyendo un imperio. Un día a la vez."',
+    '"Antes de abrir el email, antes de atender la primera urgencia — ¿cuál es la decisión estratégica de hoy?"'
+  ],
+  tarde: [
+    '"Mitad del día. ¿Estás en modo ejecutivo o en modo operativo? El Ratio 60/40 se gana en este momento."',
+    '"El Modo Padilla se activa en la tarde. Una urgencia no es una prioridad. ¿Qué es lo más importante ahora?"',
+    '"El hombre superior no reacciona a lo urgente — responde a lo importante. ¿En cuál estás ahora mismo?"'
+  ],
+  noche: [
+    '"Cierre del día. No lo que evitaste — lo que construiste. ¿Cuál es la respuesta honesta?"',
+    '"La noche no es para el análisis emocional. Es para el registro ejecutivo. ¿Qué construiste hoy?"',
+    '"Un hombre que sabe lo que construyó hoy duerme distinto a uno que no lo sabe."'
+  ],
+  madrugada: [
+    '"La madrugada tiene solo dos razones válidas: trabajo real o descanso real. ¿Cuál es la tuya?"',
+    '"Fudoshin: la mente inamovible no se agita a esta hora. El pulso no sube. Vuelve a tu centro."',
+    '"Si estás aquí a esta hora pensando en alguien — eso es dopamina barata. Cierra el teléfono."'
+  ],
+  lunes: [
+    '"Lunes. La semana es tuya para diseñar o para improvisar. El hombre que construye la diseña antes de que arranque."',
+    '"Arranque de semana. Una pregunta: ¿Cuál es el movimiento estratégico más importante que puedes hacer esta semana?"'
+  ],
+  viernes: [
+    '"Viernes. No para el descanso todavía — para la revisión. 20 minutos. Tres preguntas. Ejecutivo y frío."',
+    '"¿Qué construiste esta semana? No lo que planeaste — lo que realmente hiciste. Esa es la medida."'
+  ]
+};
+
+function getFrase(ctx){
+  const momento = getMomento(ctx.hora);
+  let pool = [];
+  if(ctx.diaSemana === 1) pool = FRASES_CTX.lunes;
+  else if(ctx.diaSemana === 5) pool = FRASES_CTX.viernes;
+  else pool = FRASES_CTX[momento] || FRASES_CTX.mañana;
+  return pool[Math.floor(new Date().getDate() % pool.length)];
+}
+
+function renderFraseCtx(ctx){
+  const el = document.getElementById('ctx-frase');
+  const frase = getFrase(ctx);
+  el.innerHTML = \`
+    <div style="background:var(--bg2);border-radius:var(--r);border-left:3px solid var(--green);padding:16px 18px;margin-bottom:8px;">
+      <div style="font-size:13px;font-style:italic;color:var(--text);line-height:1.7;">\${frase}</div>
+    </div>\`;
+}
+
+function renderAccionCtx(ctx){
+  const el = document.getElementById('ctx-accion');
+  let acciones = [];
+
+  // Acción principal basada en contexto
+  if(ctx.diasSinCheckin >= 3){
+    acciones.push({label:'Registrar hoy', sub:'Llevas '+ctx.diasSinCheckin+' días fuera del sistema', color:'var(--red)', onclick:'document.getElementById('d-construi').focus()'});
+  }
+
+  if(ctx.revisionPendiente){
+    acciones.push({label:'Abrir revisión semanal', sub:'Viernes — 20 minutos ejecutivos', color:'var(--purple)', onclick:"goPage('construir',document.querySelector('.bn:nth-child(2))');goSub('construir','revision',document.querySelector('.mt'))"});
+  }
+
+  if(!ctx.kpisCompleto && ctx.diasSinCheckin === 0){
+    const pendientes = [1,2,3,4].filter(k=>ctx.kpisOk<4 && !S.kpis?.[k]).length;
+    if(pendientes > 0){
+      acciones.push({label:'Completar check-in de hoy', sub:ctx.kpisOk+'/4 KPIs marcados', color:'var(--green)', onclick:'window.scrollBy(0,200)'});
+    }
+  }
+
+  if(ctx.diaSemana === 3){
+    acciones.push({label:'Oráculo — decisión de hoy', sub:'Miércoles: consulta tu movimiento estratégico', color:'var(--olive)', onclick:"goPage('oraculo',document.querySelector('.bn:nth-child(4))');"});
+  }
+
+  if(!acciones.length) return;
+
+  el.innerHTML = acciones.map(a=>\`
+    <div onclick="\${a.onclick}" style="background:var(--bg3);border-radius:var(--r2);border:0.5px solid var(--border);padding:11px 13px;margin-bottom:7px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px;">\${a.label}</div>
+        <div style="font-size:10px;color:var(--text3);">\${a.sub}</div>
+      </div>
+      <div style="font-size:16px;color:\${a.color};">→</div>
+    </div>\`).join('');
+}
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+
+function goPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.bn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function goSub(page,id,btn){
+  const prefix='sub-'+page+'-';
+  document.querySelectorAll('[id^="'+prefix+'"]').forEach(s=>s.classList.remove('active'));
+  btn.closest('.mod-tabs').querySelectorAll('.mt').forEach(b=>b.classList.remove('active'));
+  document.getElementById(prefix+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ══════════════════════════════════════════
+// FRASES
+// ══════════════════════════════════════════
+
+let fIdx = 0;
+function renderFrase(){
+  // Legacy — ahora usa renderContexto
+  fIdx = (new Date().getDate()-1)%FRASES.length;
+}
+function nextF(){renderContexto();}
+function prevF(){renderContexto();}
+
+// ══════════════════════════════════════════
+// KPIs
+// ══════════════════════════════════════════
+
+function setK(k,v){if(!S.kpis)S.kpis={};S.kpis[k]=v;renderKpis();}
+function renderKpis(){
+  for(let k=1;k<=6;k++){
+    const v=S.kpis?.[k];
+    const y=document.getElementById('k'+k+'y'); const n=document.getElementById('k'+k+'n'); const d=document.getElementById('k'+k+'d');
+    if(y)y.className='kbtn'+(v===true?' g':''); if(n)n.className='kbtn'+(v===false?' r':'');
+    if(d)d.className='kdot'+(v===true?' g':v===false?' r':'');
+  }
+}
+
+// ══════════════════════════════════════════
+// DIARIO
+// ══════════════════════════════════════════
+
+function today(){return new Date().toISOString().split('T')[0];}
+function loadDiario(){
+  const e=(S.dias||[]).find(d=>d.fecha===today());
+  if(e){document.getElementById('d-construi').value=e.construi||'';document.getElementById('d-cedi').value=e.cedi||'';document.getElementById('d-mov').value=e.mov||'';}
+}
+
+function guardarDia(){
+  const entry={fecha:today(),construi:document.getElementById('d-construi').value,cedi:document.getElementById('d-cedi').value,mov:document.getElementById('d-mov').value,kpis:{...S.kpis}};
+  if(!S.dias)S.dias=[];
+  const idx=S.dias.findIndex(d=>d.fecha===today());
+  if(idx>=0)S.dias[idx]=entry;else S.dias.unshift(entry);
+  const allOk=[1,2,3,4].every(k=>S.kpis?.[k]===true);
+  const yest=new Date();yest.setDate(yest.getDate()-1);
+  const yKey=yest.toISOString().split('T')[0];
+  S.streak=allOk?(S.dias.some(d=>d.fecha===yKey)?(S.streak||0)+1:1):0;
+  document.getElementById('h-streak').textContent=S.streak;
+  saveS();renderHist();renderContexto();toast('Día guardado');
+}
+
+// ══════════════════════════════════════════
+// REVISIÓN SEMANAL
+// ══════════════════════════════════════════
+
+function guardarRevision(){
+  const entry={fecha:today(),construi:document.getElementById('rv-construi').value,cedi:document.getElementById('rv-cedi').value,siguiente:document.getElementById('rv-siguiente').value};
+  if(!S.revisiones)S.revisiones=[];
+  S.revisiones.unshift(entry);
+  document.getElementById('rv-construi').value='';
+  document.getElementById('rv-cedi').value='';
+  document.getElementById('rv-siguiente').value='';
+  saveS();renderRevHist();toast('Revisión guardada');
+}
+
+function renderRevHist(){
+  const el=document.getElementById('rv-hist');
+  if(!S.revisiones||!S.revisiones.length){el.innerHTML='<div class="empty">Aún no hay revisiones.</div>';return;}
+  el.innerHTML=S.revisiones.slice(0,8).map(r=>`<div class="hist-item"><div class="hist-date">${r.fecha}</div>${r.construi?`<div class="hist-text"><strong>Construí:</strong> ${r.construi}</div>`:''}${r.siguiente?`<div class="hist-text"><strong>Siguiente movimiento:</strong> ${r.siguiente}</div>`:''}</div>`).join('');
+}
+
+// ══════════════════════════════════════════
+// ENTRENAMIENTO
+// ══════════════════════════════════════════
+
+let trainR=false;
+
+function renderTrain(){
+  const i=(S.trainIdx||0)%TRAIN.length;const t=TRAIN[i];
+  trainR=false;
+  document.getElementById('train-sit').textContent='Situación: '+t.sit;
+  document.getElementById('train-preg').textContent=t.preg;
+  const fb=document.getElementById('train-fb');fb.className='des-fb';fb.textContent='';
+  document.getElementById('train-next').className='nbtn';
+  document.getElementById('train-opts').innerHTML=t.opts.map((o,j)=>`<button class="des-opt" onclick="respTrain(${j})">${o}</button>`).join('');
+}
+
+function respTrain(idx){
+  if(trainR)return;trainR=true;
+  const t=TRAIN[(S.trainIdx||0)%TRAIN.length];
+  document.querySelectorAll('#train-opts .des-opt').forEach((o,j)=>{o.classList.add('disabled');if(j===t.c)o.classList.add('ok');else if(j===idx)o.classList.add('fail');});
+  const ok=idx===t.c;
+  const fb=document.getElementById('train-fb');
+  fb.textContent=(ok?'✓ ':' ✗ ')+(ok?t.ok:t.fail);
+  fb.className='des-fb show '+(ok?'ok':'fail');
+  if(ok){S.desOk=(S.desOk||0)+1;S.xp=(S.xp||0)+20;document.getElementById('h-xp').textContent=S.xp;updateApStats();}
+  document.getElementById('train-next').className='nbtn show';
+  saveS();
+}
+
+function nextTrain(){S.trainIdx=((S.trainIdx||0)+1)%TRAIN.length;renderTrain();}
+
+// ══════════════════════════════════════════
+// FLASHCARDS
+// ══════════════════════════════════════════
+
+function getFCArr(){return S.fcSet==='39'?FC_39:S.fcSet==='est'?FC_EST:FC_ENER;}
+function getDomKey(){return 'dominadas_'+S.fcSet;}
+
+function setFCSet(set,btn){
+  S.fcSet=set;S.fcIdx=0;S.fcOpen=false;
+  btn.closest('.mod-tabs').querySelectorAll('.mt').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderFC();
+}
+
+function renderFC(){
+  const arr=getFCArr();const i=S.fcIdx||0;const f=arr[i%arr.length];
+  document.getElementById('fc-tag').textContent=f.tag;
+  document.getElementById('fc-q').textContent=f.q;
+  document.getElementById('fc-at').textContent=f.a;
+  document.getElementById('fc-ap').textContent='Tu realidad: '+f.ap;
+  document.getElementById('fc-ans').classList.remove('show');
+  document.getElementById('fc-ctrl').classList.remove('show');
+  S.fcOpen=false;
+  document.getElementById('fc-c').textContent='Tarjeta '+(i%arr.length+1)+' de '+arr.length;
+  const dom=S[getDomKey()]||[];
+  document.getElementById('fc-pb').style.width=Math.round(dom.length/arr.length*100)+'%';
+}
+
+function toggleFC(){if(S.fcOpen)return;document.getElementById('fc-ans').classList.add('show');document.getElementById('fc-ctrl').classList.add('show');S.fcOpen=true;}
+
+function fcRes(ok){
+  const arr=getFCArr();const i=S.fcIdx||0;const key=getDomKey();
+  if(!S[key])S[key]=[];
+  const realIdx=i%arr.length;
+  if(ok&&!S[key].includes(realIdx)){S[key].push(realIdx);S.xp=(S.xp||0)+10;document.getElementById('h-xp').textContent=S.xp;}
+  else if(!ok)S[key]=S[key].filter(x=>x!==realIdx);
+  saveS();nextFC();updateApStats();
+}
+
+function nextFC(){S.fcIdx=((S.fcIdx||0)+1);renderFC();}
+function prevFC(){S.fcIdx=Math.max(0,(S.fcIdx||0)-1);renderFC();}
+
+function updateApStats(){
+  document.getElementById('ap-xp').textContent=S.xp||0;
+  const dom=(S.dominadas_39||[]).length+(S.dominadas_est||[]).length+(S.dominadas_ener||[]).length;
+  document.getElementById('ap-dom').textContent=dom;
+  document.getElementById('ap-des').textContent=S.desOk||0;
+}
+
+// ══════════════════════════════════════════
+// BIBLIOTECA
+// ══════════════════════════════════════════
+
+let activeTerm=null;
+
+function renderBiblioteca(){
+  renderLibSection('lib-39',LIB_39,'39');
+  renderLibSection('lib-est',LIB_EST,'est');
+  renderEntorno();
+}
+
+function renderEntorno(){
+  // Render posturas
+  const plEl = document.getElementById('posturas-list');
+  if(plEl && typeof POSTURAS !== 'undefined'){
+    plEl.innerHTML = POSTURAS.map(p => `
+      <div style="background:var(--bg3);border-radius:var(--r2);border:0.5px solid var(--border);padding:12px 14px;margin-bottom:7px;">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--green);margin-bottom:3px;font-weight:600;">${p.marco}</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:5px;font-style:italic;">${p.contexto}</div>
+        <div style="font-size:12px;color:var(--text);line-height:1.55;border-left:2px solid var(--green);padding-left:10px;">"${p.postura}"</div>
+      </div>`).join('');
+  }
+
+  // Render KPIs energía
+  const kpEl = document.getElementById('kpis-energia-list');
+  if(kpEl && typeof KPIS_ENERGIA !== 'undefined'){
+    kpEl.innerHTML = KPIS_ENERGIA.map(k => `
+      <div style="background:var(--bg3);border-radius:var(--r2);border:0.5px solid var(--border);padding:12px 14px;margin-bottom:7px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">
+          <div style="font-size:12px;font-weight:600;color:var(--text);flex:1;">${k.nombre}</div>
+          <div style="font-size:9px;color:var(--text3);text-align:right;margin-left:8px;">${k.frecuencia}</div>
+        </div>
+        <div style="font-size:10px;color:var(--green);margin-bottom:4px;font-weight:600;">${k.marco}</div>
+        <div style="font-size:11px;color:var(--text2);background:var(--bg2);padding:6px 9px;border-radius:var(--r3);margin-bottom:4px;font-family:monospace;">${k.formula}</div>
+        <div style="font-size:11px;color:var(--text2);">Meta: <strong style="color:var(--olive);">${k.meta}</strong> — ${k.desc}</div>
+      </div>`).join('');
+  }
+}
+
+function renderLibSection(elId,arr,prefix){
+  const el=document.getElementById(elId);
+  if(!el)return;
+  el.innerHTML=arr.map((libro,li)=>`
+    <div class="lib-book">
+      <div class="lib-title">${libro.titulo}</div>
+      <div class="lib-author">${libro.autor}</div>
+      <div class="lib-terms">${libro.terminos.map((t,ti)=>`<span class="lib-term" onclick="showTerm('${prefix}',${li},${ti})">${t.t}</span>`).join('')}</div>
+      <div class="term-detail" id="td-${prefix}-${li}"></div>
+    </div>`).join('');
+}
+
+function showTerm(prefix,li,ti){
+  const arr=prefix==='39'?LIB_39:LIB_EST;
+  const t=arr[li].terminos[ti];
+  const id=`td-${prefix}-${li}`;
+  const key=`${id}-${ti}`;
+  document.querySelectorAll('.term-detail').forEach(d=>{d.classList.remove('show');d.innerHTML='';});
+  if(activeTerm===key){activeTerm=null;return;}
+  const el=document.getElementById(id);
+  el.innerHTML=`<div class="term-name">${t.t}</div><div class="term-def">${t.d}</div><div class="term-apply">Tu realidad: ${t.a}</div>`;
+  el.classList.add('show');activeTerm=key;
+}
+
+// ══════════════════════════════════════════
+// PRÁCTICAS ENERGÉTICAS
+// ══════════════════════════════════════════
+
+function renderPracticas(){
+  const hoy=S.practicas?.[today()]||{};
+  document.getElementById('pract-list').innerHTML=PRACTICAS.map((p,i)=>`
+    <div class="pract-item">
+      <div class="pract-left"><div class="pract-name">${p.n}</div><div class="pract-sub">${p.d}</div></div>
+      <button class="pract-chk${hoy['p'+(i+1)]?' done':''}" id="pr${i+1}" onclick="toggleP(${i+1})">✓</button>
+    </div>`).join('');
+}
+
+function toggleP(n){
+  if(!S.practicas)S.practicas={};if(!S.practicas[today()])S.practicas[today()]={};
+  S.practicas[today()]['p'+n]=!S.practicas[today()]['p'+n];
+  const btn=document.getElementById('pr'+n);
+  if(btn)btn.className='pract-chk'+(S.practicas[today()]['p'+n]?' done':'');
+}
+
+function guardarPractica(){saveS();toast('Práctica guardada');}
+
+// ══════════════════════════════════════════
+// METAS
+// ══════════════════════════════════════════
+
+function renderMetas(){
+  const el=document.getElementById('metas-list');
+  if(!S.metas||!S.metas.length){el.innerHTML='<div class="empty">Agrega tu primera meta.</div>';return;}
+  el.innerHTML=S.metas.map((m,i)=>`
+    <div class="meta-item">
+      <div class="meta-top">
+        <div><div class="meta-name">${m.nombre}</div><div class="meta-cat">${m.cat}</div></div>
+        <div style="display:flex;align-items:center;gap:6px;"><span class="meta-pct">${m.pct}%</span><button class="mdel" onclick="delMeta(${i})">🗑</button></div>
+      </div>
+      <div class="meta-bar-bg"><div class="meta-bar" style="width:${m.pct}%"></div></div>
+    </div>`).join('');
+}
+
+function addMeta(){
+  const n=document.getElementById('m-nombre').value.trim();if(!n)return;
+  if(!S.metas)S.metas=[];
+  S.metas.push({nombre:n,cat:document.getElementById('m-cat').value,pct:parseInt(document.getElementById('m-pct').value)});
+  document.getElementById('m-nombre').value='';document.getElementById('m-pct').value=0;document.getElementById('m-pct-v').textContent='0%';
+  saveS();renderMetas();toast('Meta agregada');
+}
+
+function delMeta(i){S.metas.splice(i,1);saveS();renderMetas();}
+
+// ══════════════════════════════════════════
+// HISTORIAL
+// ══════════════════════════════════════════
+
+function renderHist(){
+  const el=document.getElementById('hist-list');
+  if(!S.dias||!S.dias.length){el.innerHTML='<div class="empty">Aún no hay días registrados.</div>';return;}
+  const KN={1:'Decidí',2:'Construí',3:'Eje',4:'Cuerpo',5:'Enfoque',6:'Ratio'};
+  el.innerHTML=S.dias.slice(0,30).map(d=>{
+    const badges=Object.keys(KN).map(k=>`<span class="hbadge${d.kpis?.[k]===true?' ok':''}">${KN[k]}</span>`).join('');
+    return`<div class="hist-item"><div class="hist-date">${d.fecha}</div><div class="hist-badges">${badges}</div>${d.mov?`<div class="hist-text"><strong>Movimiento:</strong> ${d.mov}</div>`:''}</div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+// SOS
+// ══════════════════════════════════════════
+
+function sosRand(){sos(Math.floor(Math.random()*SOS_DATA.length));}
+function sos(i){
+  const a=SOS_DATA[i];
+  document.getElementById('sos-tag').textContent=a.tag;
+  document.getElementById('sos-text').textContent=a.text;
+  document.getElementById('sos-action').textContent=a.action;
+  const el=document.getElementById('sos-resp');el.classList.add('show');
+  el.scrollIntoView({behavior:'smooth',block:'nearest'});
+  // Track SOS usage for context engine
+  S.sosActivado=(S.sosActivado||0)+1;
+  S.ultimoSOS=today();
+  saveS();
+}
+
+// ══════════════════════════════════════════
+// ORÁCULO IA
+// ══════════════════════════════════════════
+
+async function callClaude(prompt,outId,textId){
+  const out=document.getElementById(outId);const txt=document.getElementById(textId);
+  out.classList.add('show');
+  txt.innerHTML='<span class="ai-loading">Analizando con tu marco completo...</span>';
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+    const data=await r.json();
+    txt.textContent=data.content?.[0]?.text||'Sin respuesta.';
+  }catch(e){txt.textContent='Error de conexión. Verifica tu acceso a internet.';}
+}
+
+async function analizarSit(){
+  const input=document.getElementById('or-sit').value.trim();if(!input){toast('Describe la situación primero');return;}
+  const marco=document.getElementById('or-marco').value;
+  const marcoInstr=marco==='39'?'Usa principalmente el marco de Operación 39 y los libros maestros.':marco==='energetico'?'Usa principalmente la carta astral.':marco==='estrategico'?'Usa principalmente el campo estratégico (Smil, Blas, Baños, Dalio, Greene).':'Integra ambos marcos: carta astral y libros maestros donde sean relevantes.';
+  const prompt=`${PERFIL_ORACULO}\n\nINSTRUCCIÓN: ${marcoInstr}\n\nSITUACIÓN:\n${input}\n\nAnaliza directamente. Identifica qué configuraciones astrales y qué conceptos de los libros aplican. Da el diagnóstico y el movimiento correcto. Máximo 250 palabras. Cita autores y configuraciones específicas.`;
+  await callClaude(prompt,'or-sit-out','or-sit-text');
+}
+
+async function consultarTerm(){
+  const input=document.getElementById('or-term').value.trim();if(!input){toast('Escribe un término primero');return;}
+  const prompt=`${PERFIL_ORACULO}\n\nCONSULTA DE TÉRMINO: "${input}"\n\n1. Definición precisa en el marco donde aplica\n2. Aplicación directa a la realidad actual de Oscar (fincas, situación con Erika, KPIs activos)\n3. Una acción concreta basada en este concepto\n\nMáximo 150 palabras. Tono ejecutivo directo.`;
+  await callClaude(prompt,'or-term-out','or-term-text');
+}
+
+async function integrarDoc(){
+  const input=document.getElementById('or-doc').value.trim();if(!input){toast('Pega el contenido primero');return;}
+  const marco=document.getElementById('or-doc-marco').value;
+  const glosActual=[...FC_39,...FC_EST,...FC_ENER].map(f=>f.tag+': '+f.q).join('\n');
+  const prompt=`${PERFIL_ORACULO}\n\nGLOSARIO ACTUAL:\n${glosActual}\n\nDOCUMENTO EXTERNO (marco: ${marco}):\n${input}\n\n1. Identifica conceptos NUEVOS que no existen en el glosario\n2. Identifica REDUNDANCIAS con conceptos existentes\n3. Para cada concepto nuevo: nombre, definición y aplicación a la realidad de Oscar\n4. Sugiere cómo integrar los nuevos al sistema\n\nMáximo 300 palabras. Ejecutivo y específico.`;
+  if(!S.glosarioExtra)S.glosarioExtra=[];
+  S.glosarioExtra.push('[Doc '+new Date().toLocaleDateString()+']: '+input.substring(0,80)+'...');
+  saveS();
+  await callClaude(prompt,'or-doc-out','or-doc-text');
+  toast('Documento procesado');
+}
+
+// ══════════════════════════════════════════
+// TOAST & INIT
+// ══════════════════════════════════════════
+
+function toast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
+
+loadS();
+</script>
+</body>
+</html>
